@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title id="head-title">fdm_full_report_2026-03-27_10-12-36.html</title>
+      <style type="text/css">body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  /* do not increase min-width as some may use split screens */
+  min-width: 800px;
+  color: #999;
+}
+
+h1 {
+  font-size: 24px;
+  color: black;
+}
+
+h2 {
+  font-size: 16px;
+  color: black;
+}
+
+p {
+  color: black;
+}
+
+a {
+  color: #999;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+/******************************
+ * SUMMARY INFORMATION
+ ******************************/
+#environment td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  vertical-align: top;
+}
+#environment tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+#environment ul {
+  margin: 0;
+  padding: 0 20px;
+}
+
+/******************************
+ * TEST RESULT COLORS
+ ******************************/
+span.passed,
+.passed .col-result {
+  color: green;
+}
+
+span.skipped,
+span.xfailed,
+span.rerun,
+.skipped .col-result,
+.xfailed .col-result,
+.rerun .col-result {
+  color: orange;
+}
+
+span.error,
+span.failed,
+span.xpassed,
+.error .col-result,
+.failed .col-result,
+.xpassed .col-result {
+  color: red;
+}
+
+.col-links__extra {
+  margin-right: 3px;
+}
+
+/******************************
+ * RESULTS TABLE
+ *
+ * 1. Table Layout
+ * 2. Extra
+ * 3. Sorting items
+ *
+ ******************************/
+/*------------------
+ * 1. Table Layout
+ *------------------*/
+#results-table {
+  border: 1px solid #e6e6e6;
+  color: #999;
+  font-size: 12px;
+  width: 100%;
+}
+#results-table th,
+#results-table td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  text-align: left;
+}
+#results-table th {
+  font-weight: bold;
+}
+
+/*------------------
+ * 2. Extra
+ *------------------*/
+.logwrapper {
+  max-height: 230px;
+  overflow-y: scroll;
+  background-color: #e6e6e6;
+}
+.logwrapper.expanded {
+  max-height: none;
+}
+.logwrapper.expanded .logexpander:after {
+  content: "collapse [-]";
+}
+.logwrapper .logexpander {
+  z-index: 1;
+  position: sticky;
+  top: 10px;
+  width: max-content;
+  border: 1px solid;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin: 10px 0 10px calc(100% - 80px);
+  cursor: pointer;
+  background-color: #e6e6e6;
+}
+.logwrapper .logexpander:after {
+  content: "expand [+]";
+}
+.logwrapper .logexpander:hover {
+  color: #000;
+  border-color: #000;
+}
+.logwrapper .log {
+  min-height: 40px;
+  position: relative;
+  top: -50px;
+  height: calc(100% + 50px);
+  border: 1px solid #e6e6e6;
+  color: black;
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  padding: 5px;
+  padding-right: 80px;
+  white-space: pre-wrap;
+}
+
+div.media {
+  border: 1px solid #e6e6e6;
+  float: right;
+  height: 240px;
+  margin: 0 5px;
+  overflow: hidden;
+  width: 320px;
+}
+
+.media-container {
+  display: grid;
+  grid-template-columns: 25px auto 25px;
+  align-items: center;
+  flex: 1 1;
+  overflow: hidden;
+  height: 200px;
+}
+
+.media-container--fullscreen {
+  grid-template-columns: 0px auto 0px;
+}
+
+.media-container__nav--right,
+.media-container__nav--left {
+  text-align: center;
+  cursor: pointer;
+}
+
+.media-container__viewport {
+  cursor: pointer;
+  text-align: center;
+  height: inherit;
+}
+.media-container__viewport img,
+.media-container__viewport video {
+  object-fit: cover;
+  width: 100%;
+  max-height: 100%;
+}
+
+.media__name,
+.media__counter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex: 0 0 25px;
+  align-items: center;
+}
+
+.collapsible td:not(.col-links) {
+  cursor: pointer;
+}
+.collapsible td:not(.col-links):hover::after {
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.col-result {
+  width: 130px;
+}
+.col-result:hover::after {
+  content: " (hide details)";
+}
+
+.col-result.collapsed:hover::after {
+  content: " (show details)";
+}
+
+#environment-header h2:hover::after {
+  content: " (hide details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#environment-header.collapsed h2:hover::after {
+  content: " (show details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/*------------------
+ * 3. Sorting items
+ *------------------*/
+.sortable {
+  cursor: pointer;
+}
+.sortable.desc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: -12.5px;
+  border: 10px solid #4caf50;
+  border-bottom: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+.sortable.asc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: 12.5px;
+  border: 10px solid #4caf50;
+  border-top: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+
+.hidden, .summary__reload__button.hidden {
+  display: none;
+}
+
+.summary__data {
+  flex: 0 0 550px;
+}
+.summary__reload {
+  flex: 1 1;
+  display: flex;
+  justify-content: center;
+}
+.summary__reload__button {
+  flex: 0 0 300px;
+  display: flex;
+  color: white;
+  font-weight: bold;
+  background-color: #4caf50;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.summary__reload__button:hover {
+  background-color: #46a049;
+}
+.summary__spacer {
+  flex: 0 0 550px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filters,
+.collapse {
+  display: flex;
+  align-items: center;
+}
+.filters button,
+.collapse button {
+  color: #999;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.filters button:hover,
+.collapse button:hover {
+  color: #ccc;
+}
+
+.filter__label {
+  margin-right: 10px;
+}
+
+      </style>
+    
+  </head>
+  <body>
+    <h1 id="title">fdm_full_report_2026-03-27_10-12-36.html</h1>
+    <p>Report generated on 27-Mar-2026 at 10:14:02 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a>
+        v4.2.0</p>
+    <div id="environment-header">
+      <h2>Environment</h2>
+    </div>
+    <table id="environment"></table>
+    <!-- TEMPLATES -->
+      <template id="template_environment_row">
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+    </template>
+    <template id="template_results-table__body--empty">
+      <tbody class="results-table-row">
+        <tr id="not-found-message">
+          <td colspan="4">No results found. Check the filters.</td>
+        </tr>
+      </tbody>
+    </template>
+    <template id="template_results-table__tbody">
+      <tbody class="results-table-row">
+        <tr class="collapsible">
+        </tr>
+        <tr class="extras-row">
+          <td class="extra" colspan="4">
+            <div class="extraHTML"></div>
+            <div class="media">
+              <div class="media-container">
+                  <div class="media-container__nav--left">&lt;</div>
+                  <div class="media-container__viewport">
+                    <img src="" />
+                    <video controls>
+                      <source src="" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="media-container__nav--right">&gt;</div>
+                </div>
+                <div class="media__name"></div>
+                <div class="media__counter"></div>
+            </div>
+            <div class="logwrapper">
+              <div class="logexpander"></div>
+              <div class="log"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </template>
+    <!-- END TEMPLATES -->
+    <div class="summary">
+      <div class="summary__data">
+        <h2>Summary</h2>
+        <div class="additional-summary prefix">
+        </div>
+        <p class="run-count">10 tests took 00:01:25.</p>
+        <p class="filter">(Un)check the boxes to filter the results.</p>
+        <div class="summary__reload">
+          <div class="summary__reload__button hidden" onclick="location.reload()">
+            <div>There are still tests running. <br />Reload this page to get the latest results!</div>
+          </div>
+        </div>
+        <div class="summary__spacer"></div>
+        <div class="controls">
+          <div class="filters">
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="failed" disabled>
+            <span class="failed">0 Failed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="passed" >
+            <span class="passed">10 Passed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="skipped" disabled>
+            <span class="skipped">0 Skipped,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xfailed" disabled>
+            <span class="xfailed">0 Expected failures,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xpassed" disabled>
+            <span class="xpassed">0 Unexpected passes,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="error" disabled>
+            <span class="error">0 Errors,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="rerun" disabled>
+            <span class="rerun">0 Reruns</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="retried" disabled>
+            <span class="retried">0 Retried,</span>
+          </div>
+          <div class="collapse">
+            <button id="show_all_details">Show all details</button>&nbsp;/&nbsp;<button id="hide_all_details">Hide all details</button>
+          </div>
+        </div>
+      </div>
+      <div class="additional-summary summary">
+      </div>
+      <div class="additional-summary postfix">
+      </div>
+    </div>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable" data-column-type="result">Result</th>
+          <th class="sortable" data-column-type="testId">Test</th>
+          <th class="sortable" data-column-type="duration">Duration</th>
+          <th>Links</th>
+        </tr>
+      </thead>
+    </table>
+  <footer>
+    <div id="data-container" data-jsonblob="{&#34;environment&#34;: {&#34;Python&#34;: &#34;3.14.0&#34;, &#34;Platform&#34;: &#34;Windows-11-10.0.26100-SP0&#34;, &#34;Packages&#34;: {&#34;pytest&#34;: &#34;9.0.2&#34;, &#34;pluggy&#34;: &#34;1.6.0&#34;}, &#34;Plugins&#34;: {&#34;allure-pytest&#34;: &#34;2.15.3&#34;, &#34;bdd&#34;: &#34;8.1.0&#34;, &#34;html&#34;: &#34;4.2.0&#34;, &#34;json-report&#34;: &#34;1.5.0&#34;, &#34;metadata&#34;: &#34;3.1.1&#34;, &#34;xdist&#34;: &#34;3.8.0&#34;}, &#34;JAVA_HOME&#34;: &#34;C:\\Program Files\\Java\\jdk-11&#34;}, &#34;tests&#34;: {&#34;tests/features/steps/test_fdm_validation_steps.py::test_invoke_fdm_lambda_with_test_event_and_validate_success&#34;: [{&#34;extras&#34;: [{&#34;name&#34;: null, &#34;format_type&#34;: &#34;html&#34;, &#34;content&#34;: &#34;&lt;div style=\&#34;margin:12px 0;font-family:&#39;Segoe UI&#39;,Arial,sans-serif;\&#34;&gt;&lt;h4 style=\&#34;margin:8px 0 4px;color:#1e293b;\&#34;&gt;FDM Lambda Response&lt;/h4&gt;&lt;table style=\&#34;border-collapse:collapse;font-size:13px;font-family:&#39;Segoe UI&#39;,Arial,sans-serif;\&#34;&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;font-weight:600;white-space:nowrap;color:#334155;\&#34;&gt;Status Code&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;font-family:monospace;color:#1e293b;\&#34;&gt;200&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&#34;, &#34;mime_type&#34;: null, &#34;extension&#34;: null}], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/features/steps/test_fdm_validation_steps.py::test_invoke_fdm_lambda_with_test_event_and_validate_success&#34;, &#34;duration&#34;: &#34;00:00:02&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/features/steps/test_fdm_validation_steps.py::test_invoke_fdm_lambda_with_test_event_and_validate_success&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:02&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:283 FDM Lambda: fdm-domain-ingestion-batca1-fdm-opensearch-update-lambda  Region: ca-central-1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:185 FDM Lambda client using profile: AC_Digital_BAT\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:216 Invoking FDM Lambda &amp;#x27;fdm-domain-ingestion-batca1-fdm-opensearch-update-lambda&amp;#x27; ...\nINFO     botocore.tokens:tokens.py:312 Loading cached SSO token for NewUatCa1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:257 FDM Lambda status: 200  |  RequestId: c0915a2e-03d2-4f19-9901-7c85c99e4f78\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:445 PASS \u2014 FDM Lambda status code = 200\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:464 PASS \u2014 FDM Lambda response printed (HTML in report)\n\n&#34;}], &#34;tests/features/steps/test_fdm_validation_steps.py::test_cloudwatch_logs_confirm_successful_fdm_lambda_ingestion&#34;: [{&#34;extras&#34;: [{&#34;name&#34;: null, &#34;format_type&#34;: &#34;html&#34;, &#34;content&#34;: &#34;&lt;div style=\&#34;margin:12px 0;font-family:&#39;Segoe UI&#39;,Arial,sans-serif;\&#34;&gt;&lt;h4 style=\&#34;margin:8px 0 4px;color:#1e293b;\&#34;&gt;FDM CloudWatch Logs \u2014 RequestId: 9ac73bbd-6627-486a-a83c-691896db2008&lt;/h4&gt;&lt;p style=\&#34;margin:2px 0 8px;color:#64748b;font-size:12px;\&#34;&gt;Log Group: /aws/lambda/fdm-domain-ingestion-batca1-fdm-opensearch-update-lambda | Events: 46&lt;/p&gt;&lt;details&gt;&lt;summary style=\&#34;cursor:pointer;color:#3b82f6;font-size:13px;margin-bottom:6px;\&#34;&gt;FDM Lambda Log Tail (last 4KB)&lt;/summary&gt;&lt;pre style=\&#34;background:#f8fafc;border:1px solid #e2e8f0;padding:10px;border-radius:4px;font-size:12px;max-height:300px;overflow:auto;\&#34;&gt;O\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Insert Formated Event&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;OperatingFlightDesignator&amp;quot;:{&amp;quot;Number&amp;quot;:8804,&amp;quot;Carrier&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;QK&amp;quot;}},&amp;quot;UTCOriginDepartureAt&amp;quot;:&amp;quot;2026-03-27&amp;quot;,&amp;quot;LocalOriginDepartureAt&amp;quot;:&amp;quot;2026-03-27&amp;quot;,&amp;quot;FlightServiceType&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;J&amp;quot;},&amp;quot;Aircraft&amp;quot;:{&amp;quot;EquipmentType&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;CR9&amp;quot;},&amp;quot;OwnerCarrier&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;QK&amp;quot;},&amp;quot;FleetIdentificationNumber&amp;quot;:&amp;quot;QK724&amp;quot;,&amp;quot;Configuration&amp;quot;:{&amp;quot;BusinessSeatCapacity&amp;quot;:12,&amp;quot;PremiumEconomySeatCapacity&amp;quot;:0,&amp;quot;EconomySeatCapacity&amp;quot;:64}},&amp;quot;DepartureAirport&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;YVR&amp;quot;},&amp;quot;UTCScheduledArrivalAt&amp;quot;:&amp;quot;2026-03-27T22:01:00Z&amp;quot;,&amp;quot;CockpitCrewEmployer&amp;quot;:{&amp;quot;Carrier&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;QK&amp;quot;}},&amp;quot;CabinCrewEmployer&amp;quot;:{&amp;quot;Carrier&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;QK&amp;quot;}},&amp;quot;UTCScheduledDepartureAt&amp;quot;:&amp;quot;2026-03-27T21:00:00Z&amp;quot;,&amp;quot;ArrivalAirport&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;SEA&amp;quot;},&amp;quot;ModifiedBy&amp;quot;:&amp;quot;OPREMIMP&amp;quot;,&amp;quot;ModifiedAt&amp;quot;:&amp;quot;2026-03-27T13:48:47Z&amp;quot;,&amp;quot;FlightStateCode&amp;quot;:&amp;quot;SKD&amp;quot;,&amp;quot;LegComment&amp;quot;:&amp;quot; REQUIRED EQUIP CHANGE FROM DH4 78Y TO CRJ9 12J 64Y AS A RESULT OF YVR DH4 FLIGHT OPS CREW CONSTRAINTS\\n DELAYED FOR EQUIP CHANGE AS A RESUIMT OF YVR FLIGHT OPS CREW CONSTRAINTS/POSSIBLE FURTHER DELAY&amp;quot;,&amp;quot;Delays&amp;quot;:[],&amp;quot;PreviousDelay&amp;quot;:{},&amp;quot;Change&amp;quot;:{},&amp;quot;Diversion&amp;quot;:{&amp;quot;Airport&amp;quot;:{},&amp;quot;Reason&amp;quot;:{}},&amp;quot;Cancellation&amp;quot;:{&amp;quot;Reason&amp;quot;:{}},&amp;quot;Distance&amp;quot;:205,&amp;quot;CreatedAt&amp;quot;:&amp;quot;2026-03-27T13:48:48.670Z&amp;quot;,&amp;quot;DepartureStatus&amp;quot;:{&amp;quot;Code&amp;quot;:&amp;quot;DLY&amp;quot;},&amp;quot;ArrivalStatus&amp;quot;:{&amp;quot;Code&amp;quot;:&amp;quot;ONT&amp;quot;},&amp;quot;OverallStatus&amp;quot;:{&amp;quot;Code&amp;quot;:&amp;quot;DLY&amp;quot;},&amp;quot;IsCancelled&amp;quot;:false,&amp;quot;ScheduledDuration&amp;quot;:&amp;quot;01:01&amp;quot;,&amp;quot;_Metadata&amp;quot;:{&amp;quot;FDM&amp;quot;:{&amp;quot;RecordModifiedAt&amp;quot;:&amp;quot;2026-03-27T14:12:41Z&amp;quot;}},&amp;quot;Overfly&amp;quot;:{&amp;quot;IsOverfly&amp;quot;:false},&amp;quot;LocalScheduledArrivalAt&amp;quot;:&amp;quot;2026-03-27T15:01:00-07:00&amp;quot;,&amp;quot;LocalScheduledDepartureAt&amp;quot;:&amp;quot;2026-03-27T14:00:00-07:00&amp;quot;,&amp;quot;UTCScheduledDepartureDate&amp;quot;:&amp;quot;2026-03-27&amp;quot;,&amp;quot;LocalScheduledDepartureDate&amp;quot;:&amp;quot;2026-03-27&amp;quot;,&amp;quot;UTCScheduledArrivalDate&amp;quot;:&amp;quot;2026-03-27&amp;quot;,&amp;quot;LocalScheduledArrivalDate&amp;quot;:&amp;quot;2026-03-27&amp;quot;}}\n2026-03-27T14:12:41.676Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;table name&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:&amp;quot;flights_2026-3&amp;quot;}\n2026-03-27T14:12:41.693Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Returning Results from dynamo db flight history table&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;updatedAt&amp;quot;:&amp;quot;2026-03-27T14:12:32.770Z&amp;quot;,&amp;quot;flightKey&amp;quot;:&amp;quot;QK-8804-2026-03-27-YVR&amp;quot;}}\n2026-03-27T14:12:41.693Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;event with an old version for doc id: QK-8804-2026-03-27-YVR&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;eventCreatedAt&amp;quot;:&amp;quot;2026-03-27T13:48:48.670Z&amp;quot;,&amp;quot;latestFlightLegTransactionCreated&amp;quot;:&amp;quot;2026-03-27T14:12:32.770Z&amp;quot;}}\n2026-03-27T14:12:41.702Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;ODH Streaming to parser Delay statistics published&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;$metadata&amp;quot;:{&amp;quot;httpStatusCode&amp;quot;:200,&amp;quot;requestId&amp;quot;:&amp;quot;58766ae2-48c5-43bf-843d-4344881cb6e0&amp;quot;,&amp;quot;attempts&amp;quot;:1,&amp;quot;totalRetryDelay&amp;quot;:0}}}\n2026-03-27T14:12:41.713Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Ingestion to Open Search Delay statistics published&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;$metadata&amp;quot;:{&amp;quot;httpStatusCode&amp;quot;:200,&amp;quot;requestId&amp;quot;:&amp;quot;90c722b1-9715-428a-8cb8-23c89ebd9178&amp;quot;,&amp;quot;attempts&amp;quot;:1,&amp;quot;totalRetryDelay&amp;quot;:0}}}\nEND RequestId: 9ac73bbd-6627-486a-a83c-691896db2008\nREPORT RequestId: 9ac73bbd-6627-486a-a83c-691896db2008\tDuration: 75.62 ms\tBilled Duration: 76 ms\tMemory Size: 512 MB\tMax Memory Used: 171 MB\t\n&lt;/pre&gt;&lt;/details&gt;&lt;div style=\&#34;margin:12px 0;font-family:&#39;Segoe UI&#39;,Arial,sans-serif;\&#34;&gt;&lt;div style=\&#34;overflow-x:auto;max-height:600px;overflow-y:auto;\&#34;&gt;&lt;table style=\&#34;border-collapse:collapse;width:100%;font-size:13px;font-family:&#39;Segoe UI&#39;,Arial,sans-serif;\&#34;&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=\&#34;border:1px solid #cbd5e1;padding:8px 12px;background:#3b82f6;color:#fff;text-align:left;white-space:nowrap;font-weight:600;position:sticky;top:0;\&#34;&gt;#&lt;/th&gt;&lt;th style=\&#34;border:1px solid #cbd5e1;padding:8px 12px;background:#3b82f6;color:#fff;text-align:left;white-space:nowrap;font-weight:600;position:sticky;top:0;\&#34;&gt;Timestamp&lt;/th&gt;&lt;th style=\&#34;border:1px solid #cbd5e1;padding:8px 12px;background:#3b82f6;color:#fff;text-align:left;white-space:nowrap;font-weight:600;position:sticky;top:0;\&#34;&gt;Message&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;1&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;START RequestId: 9ac73bbd-6627-486a-a83c-691896db2008 Version: $LATEST&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.639Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Input Event&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;event&amp;quot;:{&amp;quot;event...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;3&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.639Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Extracted records&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:[{&amp;quot;topic&amp;quot;:...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;4&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.639Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Decoded records count: &amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:1}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;5&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.640Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Decoded Kafka Record&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;timeS...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;6&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.640Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;OpenSearch connector searchForFlight&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;7&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.640Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;OpenSearch adapter search&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;8&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.653Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;OpenSearch adapter search Success Response&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JS...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;9&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.653Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;OpenSearch connector searchForFlight Success&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;10&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.653Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Total matches:&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:1}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;11&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.653Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Existing docs:&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:[&amp;quot;QK-8804-202...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;12&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.653Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Fleet Identification Processing&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;paylo...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;13&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.653Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;starting flight status calculation&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;14&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.653Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;ending flight status calculation&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;15&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.654Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;starting duration calculation&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;16&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.654Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;ending duration calculation&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;17&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.654Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;starting seats calculation&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;18&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.654Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;ending seats calculation&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;19&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.654Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Starting distance calculation&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;20&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.654Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t[secrets-cache] checking secrets cache&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;21&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.654Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t[secrets-cache] has cache&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;22&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.654Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t[secrets-cache] secretsValue&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;23&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.672Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Extracted records&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:[{&amp;quot;Distanc...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;24&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.672Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Distance&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:205}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;25&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.673Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;ending distance calculation&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;26&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.673Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;starting delay calculation&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;27&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.673Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;ending delay calculation&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;28&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.673Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;start resetFieldsIfNewDeparture&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;29&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.673Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;not a RTR recovery leg, so skip resetFieldsIfNewDeparture&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;30&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.673Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;start local time calculation&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;31&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.674Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Timezne Cache Hit ...&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;year...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;32&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.674Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;UTCScheduledArrivalAt Local Date Conversion : SEA&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logForm...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;33&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.674Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Timezne Cache Hit ...&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;year...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;34&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.674Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;UTCScheduledDepartureAt Local Date Conversion : YVR&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFo...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;35&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.674Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Cancellation.OccuredAt Local Date Conversion&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;36&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.674Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Diversion.OccuredAt Local Date Conversion&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSO...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;37&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.675Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;end local time calculation&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;38&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.675Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Formatted Event Count: &amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:1}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;39&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.675Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Insert Formated Event&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;Oper...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;40&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.676Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;table name&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:&amp;quot;flights_2026-3&amp;quot;}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;41&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.693Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Returning Results from dynamo db flight history table&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;log...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;42&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.693Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;event with an old version for doc id: QK-8804-2026-03-27-YVR&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestio...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;43&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.702Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;ODH Streaming to parser Delay statistics published&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFor...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;44&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:41.713Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Ingestion to Open Search Delay statistics published&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFo...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;45&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;END RequestId: 9ac73bbd-6627-486a-a83c-691896db2008&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;46&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:41 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;REPORT RequestId: 9ac73bbd-6627-486a-a83c-691896db2008\tDuration: 75.62 ms\tBilled Duration: 76 ms\tMemory Size: 512 MB\tMax Memory Used: 171 MB&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&lt;p style=\&#34;margin:4px 0 0;color:#64748b;font-size:12px;\&#34;&gt;Total rows: 46&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&#34;, &#34;mime_type&#34;: null, &#34;extension&#34;: null}, {&#34;name&#34;: null, &#34;format_type&#34;: &#34;html&#34;, &#34;content&#34;: &#34;&lt;div style=\&#34;margin:12px 0;font-family:&#39;Segoe UI&#39;,Arial,sans-serif;\&#34;&gt;&lt;h4 style=\&#34;margin:8px 0 4px;color:#1e293b;\&#34;&gt;FDM Lambda Log Tail \u2014 RequestId: 9ac73bbd-6627-486a-a83c-691896db2008&lt;/h4&gt;&lt;pre style=\&#34;background:#f8fafc;border:1px solid #e2e8f0;padding:12px;border-radius:6px;overflow-x:auto;font-size:12px;line-height:1.5;max-height:400px;overflow-y:auto;color:#1e293b;\&#34;&gt;O\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Insert Formated Event&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;OperatingFlightDesignator&amp;quot;:{&amp;quot;Number&amp;quot;:8804,&amp;quot;Carrier&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;QK&amp;quot;}},&amp;quot;UTCOriginDepartureAt&amp;quot;:&amp;quot;2026-03-27&amp;quot;,&amp;quot;LocalOriginDepartureAt&amp;quot;:&amp;quot;2026-03-27&amp;quot;,&amp;quot;FlightServiceType&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;J&amp;quot;},&amp;quot;Aircraft&amp;quot;:{&amp;quot;EquipmentType&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;CR9&amp;quot;},&amp;quot;OwnerCarrier&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;QK&amp;quot;},&amp;quot;FleetIdentificationNumber&amp;quot;:&amp;quot;QK724&amp;quot;,&amp;quot;Configuration&amp;quot;:{&amp;quot;BusinessSeatCapacity&amp;quot;:12,&amp;quot;PremiumEconomySeatCapacity&amp;quot;:0,&amp;quot;EconomySeatCapacity&amp;quot;:64}},&amp;quot;DepartureAirport&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;YVR&amp;quot;},&amp;quot;UTCScheduledArrivalAt&amp;quot;:&amp;quot;2026-03-27T22:01:00Z&amp;quot;,&amp;quot;CockpitCrewEmployer&amp;quot;:{&amp;quot;Carrier&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;QK&amp;quot;}},&amp;quot;CabinCrewEmployer&amp;quot;:{&amp;quot;Carrier&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;QK&amp;quot;}},&amp;quot;UTCScheduledDepartureAt&amp;quot;:&amp;quot;2026-03-27T21:00:00Z&amp;quot;,&amp;quot;ArrivalAirport&amp;quot;:{&amp;quot;IATACode&amp;quot;:&amp;quot;SEA&amp;quot;},&amp;quot;ModifiedBy&amp;quot;:&amp;quot;OPREMIMP&amp;quot;,&amp;quot;ModifiedAt&amp;quot;:&amp;quot;2026-03-27T13:48:47Z&amp;quot;,&amp;quot;FlightStateCode&amp;quot;:&amp;quot;SKD&amp;quot;,&amp;quot;LegComment&amp;quot;:&amp;quot; REQUIRED EQUIP CHANGE FROM DH4 78Y TO CRJ9 12J 64Y AS A RESULT OF YVR DH4 FLIGHT OPS CREW CONSTRAINTS\\n DELAYED FOR EQUIP CHANGE AS A RESUIMT OF YVR FLIGHT OPS CREW CONSTRAINTS/POSSIBLE FURTHER DELAY&amp;quot;,&amp;quot;Delays&amp;quot;:[],&amp;quot;PreviousDelay&amp;quot;:{},&amp;quot;Change&amp;quot;:{},&amp;quot;Diversion&amp;quot;:{&amp;quot;Airport&amp;quot;:{},&amp;quot;Reason&amp;quot;:{}},&amp;quot;Cancellation&amp;quot;:{&amp;quot;Reason&amp;quot;:{}},&amp;quot;Distance&amp;quot;:205,&amp;quot;CreatedAt&amp;quot;:&amp;quot;2026-03-27T13:48:48.670Z&amp;quot;,&amp;quot;DepartureStatus&amp;quot;:{&amp;quot;Code&amp;quot;:&amp;quot;DLY&amp;quot;},&amp;quot;ArrivalStatus&amp;quot;:{&amp;quot;Code&amp;quot;:&amp;quot;ONT&amp;quot;},&amp;quot;OverallStatus&amp;quot;:{&amp;quot;Code&amp;quot;:&amp;quot;DLY&amp;quot;},&amp;quot;IsCancelled&amp;quot;:false,&amp;quot;ScheduledDuration&amp;quot;:&amp;quot;01:01&amp;quot;,&amp;quot;_Metadata&amp;quot;:{&amp;quot;FDM&amp;quot;:{&amp;quot;RecordModifiedAt&amp;quot;:&amp;quot;2026-03-27T14:12:41Z&amp;quot;}},&amp;quot;Overfly&amp;quot;:{&amp;quot;IsOverfly&amp;quot;:false},&amp;quot;LocalScheduledArrivalAt&amp;quot;:&amp;quot;2026-03-27T15:01:00-07:00&amp;quot;,&amp;quot;LocalScheduledDepartureAt&amp;quot;:&amp;quot;2026-03-27T14:00:00-07:00&amp;quot;,&amp;quot;UTCScheduledDepartureDate&amp;quot;:&amp;quot;2026-03-27&amp;quot;,&amp;quot;LocalScheduledDepartureDate&amp;quot;:&amp;quot;2026-03-27&amp;quot;,&amp;quot;UTCScheduledArrivalDate&amp;quot;:&amp;quot;2026-03-27&amp;quot;,&amp;quot;LocalScheduledArrivalDate&amp;quot;:&amp;quot;2026-03-27&amp;quot;}}\n2026-03-27T14:12:41.676Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;table name&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:&amp;quot;flights_2026-3&amp;quot;}\n2026-03-27T14:12:41.693Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Returning Results from dynamo db flight history table&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;updatedAt&amp;quot;:&amp;quot;2026-03-27T14:12:32.770Z&amp;quot;,&amp;quot;flightKey&amp;quot;:&amp;quot;QK-8804-2026-03-27-YVR&amp;quot;}}\n2026-03-27T14:12:41.693Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;event with an old version for doc id: QK-8804-2026-03-27-YVR&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;eventCreatedAt&amp;quot;:&amp;quot;2026-03-27T13:48:48.670Z&amp;quot;,&amp;quot;latestFlightLegTransactionCreated&amp;quot;:&amp;quot;2026-03-27T14:12:32.770Z&amp;quot;}}\n2026-03-27T14:12:41.702Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;ODH Streaming to parser Delay statistics published&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;$metadata&amp;quot;:{&amp;quot;httpStatusCode&amp;quot;:200,&amp;quot;requestId&amp;quot;:&amp;quot;58766ae2-48c5-43bf-843d-4344881cb6e0&amp;quot;,&amp;quot;attempts&amp;quot;:1,&amp;quot;totalRetryDelay&amp;quot;:0}}}\n2026-03-27T14:12:41.713Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Ingestion to Open Search Delay statistics published&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;$metadata&amp;quot;:{&amp;quot;httpStatusCode&amp;quot;:200,&amp;quot;requestId&amp;quot;:&amp;quot;90c722b1-9715-428a-8cb8-23c89ebd9178&amp;quot;,&amp;quot;attempts&amp;quot;:1,&amp;quot;totalRetryDelay&amp;quot;:0}}}\nEND RequestId: 9ac73bbd-6627-486a-a83c-691896db2008\nREPORT RequestId: 9ac73bbd-6627-486a-a83c-691896db2008\tDuration: 75.62 ms\tBilled Duration: 76 ms\tMemory Size: 512 MB\tMax Memory Used: 171 MB\t\n&lt;/pre&gt;&lt;/div&gt;&#34;, &#34;mime_type&#34;: null, &#34;extension&#34;: null}], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/features/steps/test_fdm_validation_steps.py::test_cloudwatch_logs_confirm_successful_fdm_lambda_ingestion&#34;, &#34;duration&#34;: &#34;00:00:14&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/features/steps/test_fdm_validation_steps.py::test_cloudwatch_logs_confirm_successful_fdm_lambda_ingestion&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:14&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:283 FDM Lambda: fdm-domain-ingestion-batca1-fdm-opensearch-update-lambda  Region: ca-central-1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:185 FDM Lambda client using profile: AC_Digital_BAT\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:216 Invoking FDM Lambda &amp;#x27;fdm-domain-ingestion-batca1-fdm-opensearch-update-lambda&amp;#x27; ...\nINFO     botocore.tokens:tokens.py:312 Loading cached SSO token for NewUatCa1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:257 FDM Lambda status: 200  |  RequestId: 9ac73bbd-6627-486a-a83c-691896db2008\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:193 FDM CloudWatch Logs client using profile: AC_Digital_BAT\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:605 Searching CloudWatch log group &amp;#x27;/aws/lambda/fdm-domain-ingestion-batca1-fdm-opensearch-update-lambda&amp;#x27; for RequestId &amp;#x27;9ac73bbd-6627-486a-a83c-691896db2008&amp;#x27; ...\nINFO     botocore.tokens:tokens.py:312 Loading cached SSO token for NewUatCa1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:639 Found 46 CloudWatch log event(s) for FDM RequestId &amp;#x27;9ac73bbd-6627-486a-a83c-691896db2008&amp;#x27;\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [1] START RequestId: 9ac73bbd-6627-486a-a83c-691896db2008 Version: $LATEST\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [2] 2026-03-27T14:12:41.639Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Input Ev\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [3] 2026-03-27T14:12:41.639Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Extracte\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [4] 2026-03-27T14:12:41.639Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Decoded \nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [5] 2026-03-27T14:12:41.640Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Decoded \nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [6] 2026-03-27T14:12:41.640Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;OpenSear\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [7] 2026-03-27T14:12:41.640Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;OpenSear\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [8] 2026-03-27T14:12:41.653Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;OpenSear\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [9] 2026-03-27T14:12:41.653Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;OpenSear\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [10] 2026-03-27T14:12:41.653Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Total ma\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [11] 2026-03-27T14:12:41.653Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Existing\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [12] 2026-03-27T14:12:41.653Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Fleet Id\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [13] 2026-03-27T14:12:41.653Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;starting\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [14] 2026-03-27T14:12:41.653Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;ending f\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [15] 2026-03-27T14:12:41.654Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;starting\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [16] 2026-03-27T14:12:41.654Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;ending d\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [17] 2026-03-27T14:12:41.654Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;starting\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [18] 2026-03-27T14:12:41.654Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;ending s\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [19] 2026-03-27T14:12:41.654Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9ac73bbd-6627-486a-a83c-691896db2008&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Starting\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [20] 2026-03-27T14:12:41.654Z\t9ac73bbd-6627-486a-a83c-691896db2008\tINFO\t[secrets-cache] checking secrets cache\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:678 PASS \u2014 FDM ingestion success confirmed via CloudWatch (pattern: &amp;#x27;success&amp;#x27;, RequestId: &amp;#x27;9ac73bbd-6627-486a-a83c-691896db2008&amp;#x27;)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:724 PASS \u2014 FDM CloudWatch log details printed (HTML in report)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:740 PASS \u2014 FDM Lambda log tail printed\n\n&#34;}], &#34;tests/features/steps/test_fdm_validation_steps.py::test_failed_fdm_ingestion_does_not_produce_s3_events&#34;: [{&#34;extras&#34;: [{&#34;name&#34;: null, &#34;format_type&#34;: &#34;html&#34;, &#34;content&#34;: &#34;&lt;div style=\&#34;margin:12px 0;font-family:&#39;Segoe UI&#39;,Arial,sans-serif;\&#34;&gt;&lt;h4 style=\&#34;margin:8px 0 4px;color:#1e293b;\&#34;&gt;FDM CloudWatch Logs \u2014 RequestId: 9b166b00-a282-401c-9234-9ab9ecaab4f4&lt;/h4&gt;&lt;p style=\&#34;margin:2px 0 8px;color:#64748b;font-size:12px;\&#34;&gt;Log Group: /aws/lambda/fdm-domain-ingestion-batca1-fdm-opensearch-update-lambda | Events: 8&lt;/p&gt;&lt;details&gt;&lt;summary style=\&#34;cursor:pointer;color:#3b82f6;font-size:13px;margin-bottom:6px;\&#34;&gt;FDM Lambda Log Tail (last 4KB)&lt;/summary&gt;&lt;pre style=\&#34;background:#f8fafc;border:1px solid #e2e8f0;padding:10px;border-radius:4px;font-size:12px;max-height:300px;overflow:auto;\&#34;&gt;START RequestId: 9b166b00-a282-401c-9234-9ab9ecaab4f4 Version: $LATEST\n2026-03-27T14:12:55.457Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Input Event&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;event&amp;quot;:{&amp;quot;eventSource&amp;quot;:&amp;quot;aws:kafka&amp;quot;,&amp;quot;records&amp;quot;:{&amp;quot;invalid-topic-0&amp;quot;:[{&amp;quot;topic&amp;quot;:&amp;quot;invalid&amp;quot;,&amp;quot;partition&amp;quot;:0,&amp;quot;offset&amp;quot;:0,&amp;quot;timestamp&amp;quot;:0,&amp;quot;timestampType&amp;quot;:&amp;quot;CREATE_TIME&amp;quot;,&amp;quot;key&amp;quot;:&amp;quot;****&amp;quot;,&amp;quot;value&amp;quot;:&amp;quot;aW52YWxpZA==&amp;quot;,&amp;quot;headers&amp;quot;:[]}]}}}}\n2026-03-27T14:12:55.458Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Extracted records&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:[{&amp;quot;topic&amp;quot;:&amp;quot;invalid&amp;quot;,&amp;quot;partition&amp;quot;:0,&amp;quot;offset&amp;quot;:0,&amp;quot;timestamp&amp;quot;:0,&amp;quot;timestampType&amp;quot;:&amp;quot;CREATE_TIME&amp;quot;,&amp;quot;key&amp;quot;:&amp;quot;****&amp;quot;,&amp;quot;value&amp;quot;:&amp;quot;aW52YWxpZA==&amp;quot;,&amp;quot;headers&amp;quot;:[]}]}\n2026-03-27T14:12:55.561Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;uploadFailedRecordsTos3&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}\n2026-03-27T14:12:55.676Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tERROR\t{&amp;quot;level&amp;quot;:&amp;quot;ERROR&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:{},&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:&amp;quot;Error in FDM OpenSearch ingestion handler&amp;quot;}\n2026-03-27T14:12:55.676Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tERROR\t{&amp;quot;level&amp;quot;:&amp;quot;ERROR&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Input Event&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;eventSource&amp;quot;:&amp;quot;aws:kafka&amp;quot;,&amp;quot;records&amp;quot;:{&amp;quot;invalid-topic-0&amp;quot;:[{&amp;quot;topic&amp;quot;:&amp;quot;invalid&amp;quot;,&amp;quot;partition&amp;quot;:0,&amp;quot;offset&amp;quot;:0,&amp;quot;timestamp&amp;quot;:0,&amp;quot;timestampType&amp;quot;:&amp;quot;CREATE_TIME&amp;quot;,&amp;quot;key&amp;quot;:&amp;quot;****&amp;quot;,&amp;quot;value&amp;quot;:&amp;quot;aW52YWxpZA==&amp;quot;,&amp;quot;headers&amp;quot;:[]}]}}}\nEND RequestId: 9b166b00-a282-401c-9234-9ab9ecaab4f4\nREPORT RequestId: 9b166b00-a282-401c-9234-9ab9ecaab4f4\tDuration: 221.82 ms\tBilled Duration: 222 ms\tMemory Size: 512 MB\tMax Memory Used: 164 MB\t\n&lt;/pre&gt;&lt;/details&gt;&lt;div style=\&#34;margin:12px 0;font-family:&#39;Segoe UI&#39;,Arial,sans-serif;\&#34;&gt;&lt;div style=\&#34;overflow-x:auto;max-height:600px;overflow-y:auto;\&#34;&gt;&lt;table style=\&#34;border-collapse:collapse;width:100%;font-size:13px;font-family:&#39;Segoe UI&#39;,Arial,sans-serif;\&#34;&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=\&#34;border:1px solid #cbd5e1;padding:8px 12px;background:#3b82f6;color:#fff;text-align:left;white-space:nowrap;font-weight:600;position:sticky;top:0;\&#34;&gt;#&lt;/th&gt;&lt;th style=\&#34;border:1px solid #cbd5e1;padding:8px 12px;background:#3b82f6;color:#fff;text-align:left;white-space:nowrap;font-weight:600;position:sticky;top:0;\&#34;&gt;Timestamp&lt;/th&gt;&lt;th style=\&#34;border:1px solid #cbd5e1;padding:8px 12px;background:#3b82f6;color:#fff;text-align:left;white-space:nowrap;font-weight:600;position:sticky;top:0;\&#34;&gt;Message&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;1&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:55 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;START RequestId: 9b166b00-a282-401c-9234-9ab9ecaab4f4 Version: $LATEST&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:55 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:55.457Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Input Event&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;event&amp;quot;:{&amp;quot;event...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;3&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:55 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:55.458Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Extracted records&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:[{&amp;quot;topic&amp;quot;:...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;4&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:55 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:55.561Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;uploadFailedRecordsTos3&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;}}&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;5&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:55 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:55.676Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tERROR\t{&amp;quot;level&amp;quot;:&amp;quot;ERROR&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:{},&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:&amp;quot;Error in FDM OpenSearch ...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;6&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:55 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27T14:12:55.676Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tERROR\t{&amp;quot;level&amp;quot;:&amp;quot;ERROR&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Input Event&amp;quot;,&amp;quot;context&amp;quot;:{&amp;quot;handlerNamespace&amp;quot;:&amp;quot;fdm-ingestion&amp;quot;,&amp;quot;logFormat&amp;quot;:&amp;quot;JSON&amp;quot;},&amp;quot;payload&amp;quot;:{&amp;quot;eventSource&amp;quot;...&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#ffffff;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;7&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:55 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;END RequestId: 9b166b00-a282-401c-9234-9ab9ecaab4f4&lt;/td&gt;&lt;/tr&gt;&lt;tr style=\&#34;background:#f1f5f9;\&#34;&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;8&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;2026-03-27 14:12:55 UTC&lt;/td&gt;&lt;td style=\&#34;border:1px solid #e2e8f0;padding:6px 12px;white-space:nowrap;\&#34;&gt;REPORT RequestId: 9b166b00-a282-401c-9234-9ab9ecaab4f4\tDuration: 221.82 ms\tBilled Duration: 222 ms\tMemory Size: 512 MB\tMax Memory Used: 164 MB&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&lt;p style=\&#34;margin:4px 0 0;color:#64748b;font-size:12px;\&#34;&gt;Total rows: 8&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&#34;, &#34;mime_type&#34;: null, &#34;extension&#34;: null}], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/features/steps/test_fdm_validation_steps.py::test_failed_fdm_ingestion_does_not_produce_s3_events&#34;, &#34;duration&#34;: &#34;00:00:25&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/features/steps/test_fdm_validation_steps.py::test_failed_fdm_ingestion_does_not_produce_s3_events&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:25&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:283 FDM Lambda: fdm-domain-ingestion-batca1-fdm-opensearch-update-lambda  Region: ca-central-1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:185 FDM Lambda client using profile: AC_Digital_BAT\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:216 Invoking FDM Lambda &amp;#x27;fdm-domain-ingestion-batca1-fdm-opensearch-update-lambda&amp;#x27; ...\nINFO     botocore.tokens:tokens.py:312 Loading cached SSO token for NewUatCa1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:257 FDM Lambda status: 200  |  RequestId: 9b166b00-a282-401c-9234-9ab9ecaab4f4\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:193 FDM CloudWatch Logs client using profile: AC_Digital_BAT\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:605 Searching CloudWatch log group &amp;#x27;/aws/lambda/fdm-domain-ingestion-batca1-fdm-opensearch-update-lambda&amp;#x27; for RequestId &amp;#x27;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;#x27; ...\nINFO     botocore.tokens:tokens.py:312 Loading cached SSO token for NewUatCa1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:639 Found 8 CloudWatch log event(s) for FDM RequestId &amp;#x27;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;#x27;\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [1] START RequestId: 9b166b00-a282-401c-9234-9ab9ecaab4f4 Version: $LATEST\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [2] 2026-03-27T14:12:55.457Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Input Ev\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [3] 2026-03-27T14:12:55.458Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Extracte\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [4] 2026-03-27T14:12:55.561Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tINFO\t{&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;uploadFa\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [5] 2026-03-27T14:12:55.676Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tERROR\t{&amp;quot;level&amp;quot;:&amp;quot;ERROR&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:{},&amp;quot;con\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [6] 2026-03-27T14:12:55.676Z\t9b166b00-a282-401c-9234-9ab9ecaab4f4\tERROR\t{&amp;quot;level&amp;quot;:&amp;quot;ERROR&amp;quot;,&amp;quot;service&amp;quot;:&amp;quot;FDM OpenSearch Event ingestion&amp;quot;,&amp;quot;correlationId&amp;quot;:&amp;quot;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Input \nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [7] END RequestId: 9b166b00-a282-401c-9234-9ab9ecaab4f4\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:641   [8] REPORT RequestId: 9b166b00-a282-401c-9234-9ab9ecaab4f4\tDuration: 221.82 ms\tBilled Duration: 222 ms\tMemory Size: 512 MB\tMax Memory Used: 164 MB\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:769 PASS \u2014 FDM processing error confirmed (indicators: [&amp;#x27;error&amp;#x27;, &amp;#x27;failed&amp;#x27;, &amp;#x27;invalid&amp;#x27;], FunctionError: None, RequestId: &amp;#x27;9b166b00-a282-401c-9234-9ab9ecaab4f4&amp;#x27;)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:201 FDM S3 client using profile: ODH_UAT\nINFO     botocore.tokens:tokens.py:312 Loading cached SSO token for NewUatCa1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:795 PASS \u2014 Verified FDM S3 prefix &amp;#x27;CDM/processed/CDM-FLIGHT-ODH-UAT/&amp;#x27; (checked 50 objects, 0 new since invocation)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:724 PASS \u2014 FDM CloudWatch log details printed (HTML in report)\n\n&#34;}], &#34;tests/features/steps/test_fdm_validation_steps.py::test_files_exist_under_cdmprocessedcdmflightodhuat_prefix&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/features/steps/test_fdm_validation_steps.py::test_files_exist_under_cdmprocessedcdmflightodhuat_prefix&#34;, &#34;duration&#34;: &#34;00:00:02&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/features/steps/test_fdm_validation_steps.py::test_files_exist_under_cdmprocessedcdmflightodhuat_prefix&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:02&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:294 FDM S3 bucket: ac-odh-derived-event-storage-uat-cac-1  Region: ca-central-1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:301 FDM S3 prefix: CDM/processed/CDM-FLIGHT-ODH-UAT/\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:201 FDM S3 client using profile: ODH_UAT\nINFO     botocore.tokens:tokens.py:312 Loading cached SSO token for NewUatCa1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:350 Found 10+ (truncated) FDM JSON file(s) under &amp;#x27;CDM/processed/CDM-FLIGHT-ODH-UAT/&amp;#x27;\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:475 PASS \u2014 Found 10 FDM JSON file(s) (minimum: 1)\n\n&#34;}], &#34;tests/features/steps/test_fdm_validation_steps.py::test_random_currentdate_fdm_event_is_valid_json&#34;: [{&#34;extras&#34;: [{&#34;name&#34;: null, &#34;format_type&#34;: &#34;html&#34;, &#34;content&#34;: &#34;&lt;div style=\&#34;margin:12px 0;font-family:&#39;Segoe UI&#39;,Arial,sans-serif;\&#34;&gt;&lt;h4 style=\&#34;margin:8px 0 4px;color:#1e293b;\&#34;&gt;FDM Event: CDM/processed/CDM-FLIGHT-ODH-UAT/AC-1007-2026-03-26-FLL_659ef364-4fcf-4251-b228-44eaaef548eb.json&lt;/h4&gt;&lt;p style=\&#34;margin:2px 0 8px;color:#64748b;font-size:12px;\&#34;&gt;Size: 3001 bytes&lt;/p&gt;&lt;pre style=\&#34;background:#f8fafc;border:1px solid #e2e8f0;padding:12px;border-radius:6px;overflow-x:auto;font-size:13px;line-height:1.5;max-height:600px;overflow-y:auto;color:#1e293b;\&#34;&gt;{\n  &amp;quot;Id&amp;quot;: &amp;quot;AC-1007-2026-03-26-FLL&amp;quot;,\n  &amp;quot;OperatingFlightDesignator&amp;quot;: {\n    &amp;quot;Number&amp;quot;: 1007,\n    &amp;quot;Carrier&amp;quot;: {\n      &amp;quot;IATACode&amp;quot;: &amp;quot;AC&amp;quot;\n    },\n    &amp;quot;Suffix&amp;quot;: null\n  },\n  &amp;quot;UTCOriginDepartureAt&amp;quot;: &amp;quot;2026-03-27&amp;quot;,\n  &amp;quot;LocalOriginDepartureAt&amp;quot;: &amp;quot;2026-03-26&amp;quot;,\n  &amp;quot;FlightServiceType&amp;quot;: {\n    &amp;quot;IATACode&amp;quot;: &amp;quot;J&amp;quot;\n  },\n  &amp;quot;Aircraft&amp;quot;: {\n    &amp;quot;EquipmentType&amp;quot;: {\n      &amp;quot;IATACode&amp;quot;: 333\n    },\n    &amp;quot;OwnerCarrier&amp;quot;: {\n      &amp;quot;IATACode&amp;quot;: &amp;quot;AC&amp;quot;\n    },\n    &amp;quot;FleetIdentificationNumber&amp;quot;: &amp;quot;AC940&amp;quot;,\n    &amp;quot;Configuration&amp;quot;: {\n      &amp;quot;BusinessSeatCapacity&amp;quot;: 32,\n      &amp;quot;PremiumEconomySeatCapacity&amp;quot;: 24,\n      &amp;quot;EconomySeatCapacity&amp;quot;: 241\n    }\n  },\n  &amp;quot;DepartureAirport&amp;quot;: {\n    &amp;quot;IATACode&amp;quot;: &amp;quot;FLL&amp;quot;,\n    &amp;quot;Gate&amp;quot;: null\n  },\n  &amp;quot;UTCScheduledArrivalAt&amp;quot;: &amp;quot;2026-03-27T03:29:00Z&amp;quot;,\n  &amp;quot;CockpitCrewEmployer&amp;quot;: {\n    &amp;quot;Carrier&amp;quot;: {\n      &amp;quot;IATACode&amp;quot;: &amp;quot;AC&amp;quot;\n    }\n  },\n  &amp;quot;CabinCrewEmployer&amp;quot;: {\n    &amp;quot;Carrier&amp;quot;: {\n      &amp;quot;IATACode&amp;quot;: &amp;quot;AC&amp;quot;\n    }\n  },\n  &amp;quot;UTCScheduledDepartureAt&amp;quot;: &amp;quot;2026-03-27T00:00:00Z&amp;quot;,\n  &amp;quot;ArrivalAirport&amp;quot;: {\n    &amp;quot;IATACode&amp;quot;: &amp;quot;YUL&amp;quot;,\n    &amp;quot;Gate&amp;quot;: null\n  },\n  &amp;quot;ModifiedBy&amp;quot;: &amp;quot;TLXINT&amp;quot;,\n  &amp;quot;ModifiedAt&amp;quot;: &amp;quot;2026-03-27T03:31:50Z&amp;quot;,\n  &amp;quot;FlightStateCode&amp;quot;: &amp;quot;ARR&amp;quot;,\n  &amp;quot;CallSign&amp;quot;: &amp;quot;ACA1007&amp;quot;,\n  &amp;quot;DepartureStand&amp;quot;: null,\n  &amp;quot;ArrivalStand&amp;quot;: null,\n  &amp;quot;LegComment&amp;quot;: null,\n  &amp;quot;InternalComment&amp;quot;: null,\n  &amp;quot;SupplementaryInformationComment&amp;quot;: &amp;quot;FOB 0157/KG&amp;quot;,\n  &amp;quot;UpliftFuelWeight&amp;quot;: 106385,\n  &amp;quot;OffBlockFuelWeight&amp;quot;: null,\n  &amp;quot;OnBlockFuelWeight&amp;quot;: 157,\n  &amp;quot;Delays&amp;quot;: [],\n  &amp;quot;UTCEstimatedArrivalAt&amp;quot;: null,\n  &amp;quot;UTCActualDepartureAt&amp;quot;: &amp;quot;2026-03-26T23:47:00Z&amp;quot;,\n  &amp;quot;UTCActualArrivalAt&amp;quot;: &amp;quot;2026-03-27T03:31:00Z&amp;quot;,\n  &amp;quot;UTCActualAirborneAt&amp;quot;: &amp;quot;2026-03-27T00:13:00Z&amp;quot;,\n  &amp;quot;UTCActualLandingAt&amp;quot;: &amp;quot;2026-03-27T03:20:00Z&amp;quot;,\n  &amp;quot;PreviousDelay&amp;quot;: {\n    &amp;quot;Code&amp;quot;: null\n  },\n  &amp;quot;Change&amp;quot;: {\n    &amp;quot;Code&amp;quot;: null\n  },\n  &amp;quot;Diversion&amp;quot;: {\n    &amp;quot;Airport&amp;quot;: {\n      &amp;quot;IATACode&amp;quot;: null\n    },\n    &amp;quot;Distance&amp;quot;: null,\n    &amp;quot;Reason&amp;quot;: {\n      &amp;quot;Code&amp;quot;: null\n    },\n    &amp;quot;OccuredAt&amp;quot;: null,\n    &amp;quot;LocalOccuredAt&amp;quot;: null\n  },\n  &amp;quot;Cancellation&amp;quot;: {\n    &amp;quot;Reason&amp;quot;: {\n      &amp;quot;Code&amp;quot;: null\n    },\n    &amp;quot;OccuredAt&amp;quot;: null,\n    &amp;quot;LocalOccuredAt&amp;quot;: null\n  },\n  &amp;quot;PreviousUTCScheduledAt&amp;quot;: null,\n  &amp;quot;Distance&amp;quot;: 2232,\n  &amp;quot;CreatedAt&amp;quot;: &amp;quot;2026-03-27T03:31:54.707Z&amp;quot;,\n  &amp;quot;DepartureStatus&amp;quot;: {\n    &amp;quot;Code&amp;quot;: &amp;quot;EAR&amp;quot;\n  },\n  &amp;quot;ArrivalStatus&amp;quot;: {\n    &amp;quot;Code&amp;quot;: &amp;quot;ONT&amp;quot;\n  },\n  &amp;quot;OverallStatus&amp;quot;: {\n    &amp;quot;Code&amp;quot;: &amp;quot;ONT&amp;quot;\n  },\n  &amp;quot;IsCancelled&amp;quot;: false,\n  &amp;quot;ScheduledDuration&amp;quot;: &amp;quot;03:29&amp;quot;,\n  &amp;quot;ActualDuration&amp;quot;: &amp;quot;03:44&amp;quot;,\n  &amp;quot;_Metadata&amp;quot;: {\n    &amp;quot;FDM&amp;quot;: {\n      &amp;quot;RecordModifiedAt&amp;quot;: &amp;quot;2026-03-27T03:31:55Z&amp;quot;\n    }\n  },\n  &amp;quot;Overfly&amp;quot;: {\n    &amp;quot;IsOverfly&amp;quot;: false\n  },\n  &amp;quot;LocalScheduledArrivalAt&amp;quot;: &amp;quot;2026-03-26T23:29:00-04:00&amp;quot;,\n  &amp;quot;LocalScheduledDepartureAt&amp;quot;: &amp;quot;2026-03-26T20:00:00-04:00&amp;quot;,\n  &amp;quot;LocalEstimatedArrivalAt&amp;quot;: null,\n  &amp;quot;LocalActualDepartureAt&amp;quot;: &amp;quot;2026-03-26T19:47:00-04:00&amp;quot;,\n  &amp;quot;LocalActualArrivalAt&amp;quot;: &amp;quot;2026-03-26T23:31:00-04:00&amp;quot;,\n  &amp;quot;LocalActualAirborneAt&amp;quot;: &amp;quot;2026-03-26T20:13:00-04:00&amp;quot;,\n  &amp;quot;LocalActualLandingAt&amp;quot;: &amp;quot;2026-03-26T23:20:00-04:00&amp;quot;,\n  &amp;quot;UTCScheduledDepartureDate&amp;quot;: &amp;quot;2026-03-27&amp;quot;,\n  &amp;quot;LocalScheduledDepartureDate&amp;quot;: &amp;quot;2026-03-26&amp;quot;,\n  &amp;quot;UTCScheduledArrivalDate&amp;quot;: &amp;quot;2026-03-27&amp;quot;,\n  &amp;quot;LocalScheduledArrivalDate&amp;quot;: &amp;quot;2026-03-26&amp;quot;,\n  &amp;quot;eventType&amp;quot;: &amp;quot;FDMInfo&amp;quot;\n}&lt;/pre&gt;&lt;/div&gt;&#34;, &#34;mime_type&#34;: null, &#34;extension&#34;: null}], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/features/steps/test_fdm_validation_steps.py::test_random_currentdate_fdm_event_is_valid_json&#34;, &#34;duration&#34;: &#34;00:00:07&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/features/steps/test_fdm_validation_steps.py::test_random_currentdate_fdm_event_is_valid_json&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:07&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:294 FDM S3 bucket: ac-odh-derived-event-storage-uat-cac-1  Region: ca-central-1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:301 FDM S3 prefix: CDM/processed/CDM-FLIGHT-ODH-UAT/\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:201 FDM S3 client using profile: ODH_UAT\nINFO     botocore.tokens:tokens.py:312 Loading cached SSO token for NewUatCa1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:384 Scanned 20000 object(s) across 20 page(s) \u2014 370 from today (2026-03-27)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:422 Selected FDMInfo file (attempt 1/50): CDM/processed/CDM-FLIGHT-ODH-UAT/AC-1007-2026-03-26-FLL_659ef364-4fcf-4251-b228-44eaaef548eb.json (modified: 2026-03-27 03:31:59+00:00, 3001 bytes)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:484 PASS \u2014 FDM file exists: CDM/processed/CDM-FLIGHT-ODH-UAT/AC-1007-2026-03-26-FLL_659ef364-4fcf-4251-b228-44eaaef548eb.json\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:493 PASS \u2014 FDM file content is valid JSON\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:514 PASS \u2014 FDM event content printed (HTML in report)\n\n&#34;}], &#34;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_has_eventtype_equal_to_fdminfo&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_has_eventtype_equal_to_fdminfo&#34;, &#34;duration&#34;: &#34;00:00:07&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_has_eventtype_equal_to_fdminfo&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:07&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:294 FDM S3 bucket: ac-odh-derived-event-storage-uat-cac-1  Region: ca-central-1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:301 FDM S3 prefix: CDM/processed/CDM-FLIGHT-ODH-UAT/\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:201 FDM S3 client using profile: ODH_UAT\nINFO     botocore.tokens:tokens.py:312 Loading cached SSO token for NewUatCa1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:384 Scanned 20000 object(s) across 20 page(s) \u2014 370 from today (2026-03-27)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:422 Selected FDMInfo file (attempt 1/50): CDM/processed/CDM-FLIGHT-ODH-UAT/AC-1002-2026-03-27-YUL_a6b5cffd-c8b6-4d40-a607-de85401f9881.json (modified: 2026-03-27 12:57:18+00:00, 2952 bytes)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:527 PASS \u2014 FDM &amp;#x27;eventType&amp;#x27; = &amp;#x27;FDMInfo&amp;#x27;\n\n&#34;}], &#34;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_id_matches_expected_format&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_id_matches_expected_format&#34;, &#34;duration&#34;: &#34;00:00:08&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_id_matches_expected_format&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:08&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:294 FDM S3 bucket: ac-odh-derived-event-storage-uat-cac-1  Region: ca-central-1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:301 FDM S3 prefix: CDM/processed/CDM-FLIGHT-ODH-UAT/\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:201 FDM S3 client using profile: ODH_UAT\nINFO     botocore.tokens:tokens.py:312 Loading cached SSO token for NewUatCa1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:384 Scanned 20000 object(s) across 20 page(s) \u2014 370 from today (2026-03-27)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:422 Selected FDMInfo file (attempt 2/50): CDM/processed/CDM-FLIGHT-ODH-UAT/AC-101-2026-03-27-YYZ_ba77cdf2-22ad-428c-b065-0fa298dd8051.json (modified: 2026-03-27 10:36:02+00:00, 2941 bytes)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:543 PASS \u2014 FDM &amp;#x27;Id&amp;#x27; = &amp;#x27;AC-101-2026-03-27-YYZ&amp;#x27; (matches Carrier-Number-Date-Airport)\n\n&#34;}], &#34;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_has_required_status_fields&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_has_required_status_fields&#34;, &#34;duration&#34;: &#34;00:00:07&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_has_required_status_fields&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:07&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:294 FDM S3 bucket: ac-odh-derived-event-storage-uat-cac-1  Region: ca-central-1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:301 FDM S3 prefix: CDM/processed/CDM-FLIGHT-ODH-UAT/\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:201 FDM S3 client using profile: ODH_UAT\nINFO     botocore.tokens:tokens.py:312 Loading cached SSO token for NewUatCa1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:384 Scanned 20000 object(s) across 20 page(s) \u2014 370 from today (2026-03-27)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:422 Selected FDMInfo file (attempt 2/50): CDM/processed/CDM-FLIGHT-ODH-UAT/AC-10-2026-03-27-NRT_c81a4f52-7c70-4cc6-ba5a-cfa3d4c37c65.json (modified: 2026-03-27 12:29:04+00:00, 3064 bytes)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:556 PASS \u2014 FDM field &amp;#x27;FlightStateCode&amp;#x27; is present (value: &amp;#x27;OUT&amp;#x27;)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:566 PASS \u2014 FDM &amp;#x27;DepartureStatus&amp;#x27; is a dict with keys: [&amp;#x27;Code&amp;#x27;]\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:591 PASS \u2014 FDM &amp;#x27;DepartureStatus.Code&amp;#x27; is present (value: &amp;#x27;DLY&amp;#x27;)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:566 PASS \u2014 FDM &amp;#x27;ArrivalStatus&amp;#x27; is a dict with keys: [&amp;#x27;Code&amp;#x27;]\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:591 PASS \u2014 FDM &amp;#x27;ArrivalStatus.Code&amp;#x27; is present (value: &amp;#x27;DLY&amp;#x27;)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:566 PASS \u2014 FDM &amp;#x27;OverallStatus&amp;#x27; is a dict with keys: [&amp;#x27;Code&amp;#x27;]\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:591 PASS \u2014 FDM &amp;#x27;OverallStatus.Code&amp;#x27; is present (value: &amp;#x27;DLY&amp;#x27;)\n\n&#34;}], &#34;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_departureairport_has_required_fields&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_departureairport_has_required_fields&#34;, &#34;duration&#34;: &#34;00:00:07&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_departureairport_has_required_fields&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:07&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:294 FDM S3 bucket: ac-odh-derived-event-storage-uat-cac-1  Region: ca-central-1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:301 FDM S3 prefix: CDM/processed/CDM-FLIGHT-ODH-UAT/\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:201 FDM S3 client using profile: ODH_UAT\nINFO     botocore.tokens:tokens.py:312 Loading cached SSO token for NewUatCa1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:384 Scanned 20000 object(s) across 20 page(s) \u2014 370 from today (2026-03-27)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:422 Selected FDMInfo file (attempt 1/50): CDM/processed/CDM-FLIGHT-ODH-UAT/AC-1007-2026-04-04-FLL_c26cabb6-cba5-4e33-8972-0c6a96fa6888.json (modified: 2026-03-27 03:27:29+00:00, 2521 bytes)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:566 PASS \u2014 FDM &amp;#x27;DepartureAirport&amp;#x27; is a dict with keys: [&amp;#x27;IATACode&amp;#x27;, &amp;#x27;Gate&amp;#x27;]\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:581 PASS \u2014 FDM &amp;#x27;DepartureAirport.IATACode&amp;#x27; = &amp;#x27;FLL&amp;#x27; (valid IATA code)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:591 PASS \u2014 FDM &amp;#x27;DepartureAirport.Gate&amp;#x27; is present (value: null)\n\n&#34;}], &#34;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_arrivalairport_has_required_fields&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_arrivalairport_has_required_fields&#34;, &#34;duration&#34;: &#34;00:00:07&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/features/steps/test_fdm_validation_steps.py::test_fdm_event_arrivalairport_has_required_fields&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:07&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:294 FDM S3 bucket: ac-odh-derived-event-storage-uat-cac-1  Region: ca-central-1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:301 FDM S3 prefix: CDM/processed/CDM-FLIGHT-ODH-UAT/\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:201 FDM S3 client using profile: ODH_UAT\nINFO     botocore.tokens:tokens.py:312 Loading cached SSO token for NewUatCa1\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:384 Scanned 20000 object(s) across 20 page(s) \u2014 370 from today (2026-03-27)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:422 Selected FDMInfo file (attempt 1/50): CDM/processed/CDM-FLIGHT-ODH-UAT/AC-100-2026-03-29-YVR_6ca1e5a9-0c3e-425d-9a9e-41f40b780158.json (modified: 2026-03-27 11:43:43+00:00, 2523 bytes)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:566 PASS \u2014 FDM &amp;#x27;ArrivalAirport&amp;#x27; is a dict with keys: [&amp;#x27;IATACode&amp;#x27;, &amp;#x27;Gate&amp;#x27;]\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:581 PASS \u2014 FDM &amp;#x27;ArrivalAirport.IATACode&amp;#x27; = &amp;#x27;YYZ&amp;#x27; (valid IATA code)\nINFO     tests.features.steps.test_fdm_validation_steps:test_fdm_validation_steps.py:591 PASS \u2014 FDM &amp;#x27;ArrivalAirport.Gate&amp;#x27; is present (value: null)\n\n&#34;}]}, &#34;renderCollapsed&#34;: [&#34;passed&#34;], &#34;initialSort&#34;: &#34;result&#34;, &#34;title&#34;: &#34;fdm_full_report_2026-03-27_10-12-36.html&#34;}"></div>
+    <script>
+      (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const { getCollapsedCategory, setCollapsedIds } = require('./storage.js')
+
+class DataManager {
+    setManager(data) {
+        const collapsedCategories = [...getCollapsedCategory(data.renderCollapsed)]
+        const collapsedIds = []
+        const tests = Object.values(data.tests).flat().map((test, index) => {
+            const collapsed = collapsedCategories.includes(test.result.toLowerCase())
+            const id = `test_${index}`
+            if (collapsed) {
+                collapsedIds.push(id)
+            }
+            return {
+                ...test,
+                id,
+                collapsed,
+            }
+        })
+        const dataBlob = { ...data, tests }
+        this.data = { ...dataBlob }
+        this.renderData = { ...dataBlob }
+        setCollapsedIds(collapsedIds)
+    }
+
+    get allData() {
+        return { ...this.data }
+    }
+
+    resetRender() {
+        this.renderData = { ...this.data }
+    }
+
+    setRender(data) {
+        this.renderData.tests = [...data]
+    }
+
+    toggleCollapsedItem(id) {
+        this.renderData.tests = this.renderData.tests.map((test) =>
+            test.id === id ? { ...test, collapsed: !test.collapsed } : test,
+        )
+    }
+
+    set allCollapsed(collapsed) {
+        this.renderData = { ...this.renderData, tests: [...this.renderData.tests.map((test) => (
+            { ...test, collapsed }
+        ))] }
+    }
+
+    get testSubset() {
+        return [...this.renderData.tests]
+    }
+
+    get environment() {
+        return this.renderData.environment
+    }
+
+    get initialSort() {
+        return this.data.initialSort
+    }
+}
+
+module.exports = {
+    manager: new DataManager(),
+}
+
+},{"./storage.js":8}],2:[function(require,module,exports){
+const mediaViewer = require('./mediaviewer.js')
+const templateEnvRow = document.getElementById('template_environment_row')
+const templateResult = document.getElementById('template_results-table__tbody')
+
+function htmlToElements(html) {
+    const temp = document.createElement('template')
+    temp.innerHTML = html
+    return temp.content.childNodes
+}
+
+const find = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return elem.querySelector(selector)
+}
+
+const findAll = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return [...elem.querySelectorAll(selector)]
+}
+
+const dom = {
+    getStaticRow: (key, value) => {
+        const envRow = templateEnvRow.content.cloneNode(true)
+        const isObj = typeof value === 'object' && value !== null
+        const values = isObj ? Object.keys(value).map((k) => `${k}: ${value[k]}`) : null
+
+        const valuesElement = htmlToElements(
+            values ? `<ul>${values.map((val) => `<li>${val}</li>`).join('')}<ul>` : `<div>${value}</div>`)[0]
+        const td = findAll('td', envRow)
+        td[0].textContent = key
+        td[1].appendChild(valuesElement)
+
+        return envRow
+    },
+    getResultTBody: ({ testId, id, log, extras, resultsTableRow, tableHtml, result, collapsed }) => {
+        const resultBody = templateResult.content.cloneNode(true)
+        resultBody.querySelector('tbody').classList.add(result.toLowerCase())
+        resultBody.querySelector('tbody').id = testId
+        resultBody.querySelector('.collapsible').dataset.id = id
+
+        resultsTableRow.forEach((html) => {
+            const t = document.createElement('template')
+            t.innerHTML = html
+            resultBody.querySelector('.collapsible').appendChild(t.content)
+        })
+
+        if (log) {
+            // Wrap lines starting with "E" with span.error to color those lines red
+            const wrappedLog = log.replace(/^E.*$/gm, (match) => `<span class="error">${match}</span>`)
+            resultBody.querySelector('.log').innerHTML = wrappedLog
+        } else {
+            resultBody.querySelector('.log').remove()
+        }
+
+        if (collapsed) {
+            resultBody.querySelector('.collapsible > .col-result')?.classList.add('collapsed')
+            resultBody.querySelector('.extras-row').classList.add('hidden')
+        } else {
+            resultBody.querySelector('.collapsible > .col-result')?.classList.remove('collapsed')
+        }
+
+        const media = []
+        extras?.forEach(({ name, format_type, content }) => {
+            if (['image', 'video'].includes(format_type)) {
+                media.push({ path: content, name, format_type })
+            }
+
+            if (format_type === 'html') {
+                resultBody.querySelector('.extraHTML').insertAdjacentHTML('beforeend', `<div>${content}</div>`)
+            }
+        })
+        mediaViewer.setup(resultBody, media)
+
+        // Add custom html from the pytest_html_results_table_html hook
+        tableHtml?.forEach((item) => {
+            resultBody.querySelector('td[class="extra"]').insertAdjacentHTML('beforeend', item)
+        })
+
+        return resultBody
+    },
+}
+
+module.exports = {
+    dom,
+    htmlToElements,
+    find,
+    findAll,
+}
+
+},{"./mediaviewer.js":6}],3:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const storageModule = require('./storage.js')
+
+const getFilteredSubSet = (filter) =>
+    manager.allData.tests.filter(({ result }) => filter.includes(result.toLowerCase()))
+
+const doInitFilter = () => {
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+}
+
+const doFilter = (type, show) => {
+    if (show) {
+        storageModule.showCategory(type)
+    } else {
+        storageModule.hideCategory(type)
+    }
+
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+
+    const sortColumn = storageModule.getSort()
+    doSort(sortColumn, true)
+}
+
+module.exports = {
+    doFilter,
+    doInitFilter,
+}
+
+},{"./datamanager.js":1,"./sort.js":7,"./storage.js":8}],4:[function(require,module,exports){
+const { redraw, bindEvents, renderStatic } = require('./main.js')
+const { doInitFilter } = require('./filter.js')
+const { doInitSort } = require('./sort.js')
+const { manager } = require('./datamanager.js')
+const data = JSON.parse(document.getElementById('data-container').dataset.jsonblob)
+
+function init() {
+    manager.setManager(data)
+    doInitFilter()
+    doInitSort()
+    renderStatic()
+    redraw()
+    bindEvents()
+}
+
+init()
+
+},{"./datamanager.js":1,"./filter.js":3,"./main.js":5,"./sort.js":7}],5:[function(require,module,exports){
+const { dom, find, findAll } = require('./dom.js')
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const { doFilter } = require('./filter.js')
+const {
+    getVisible,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    getSortDirection,
+    possibleFilters,
+} = require('./storage.js')
+
+const removeChildren = (node) => {
+    while (node.firstChild) {
+        node.removeChild(node.firstChild)
+    }
+}
+
+const renderStatic = () => {
+    const renderEnvironmentTable = () => {
+        const environment = manager.environment
+        const rows = Object.keys(environment).map((key) => dom.getStaticRow(key, environment[key]))
+        const table = document.getElementById('environment')
+        removeChildren(table)
+        rows.forEach((row) => table.appendChild(row))
+    }
+    renderEnvironmentTable()
+}
+
+const addItemToggleListener = (elem) => {
+    elem.addEventListener('click', ({ target }) => {
+        const id = target.parentElement.dataset.id
+        manager.toggleCollapsedItem(id)
+
+        const collapsedIds = getCollapsedIds()
+        if (collapsedIds.includes(id)) {
+            const updated = collapsedIds.filter((item) => item !== id)
+            setCollapsedIds(updated)
+        } else {
+            collapsedIds.push(id)
+            setCollapsedIds(collapsedIds)
+        }
+        redraw()
+    })
+}
+
+const renderContent = (tests) => {
+    const sortAttr = getSort(manager.initialSort)
+    const sortAsc = JSON.parse(getSortDirection())
+    const rows = tests.map(dom.getResultTBody)
+    const table = document.getElementById('results-table')
+    const tableHeader = document.getElementById('results-table-head')
+
+    const newTable = document.createElement('table')
+    newTable.id = 'results-table'
+
+    // remove all sorting classes and set the relevant
+    findAll('.sortable', tableHeader).forEach((elem) => elem.classList.remove('asc', 'desc'))
+    tableHeader.querySelector(`.sortable[data-column-type="${sortAttr}"]`)?.classList.add(sortAsc ? 'desc' : 'asc')
+    newTable.appendChild(tableHeader)
+
+    if (!rows.length) {
+        const emptyTable = document.getElementById('template_results-table__body--empty').content.cloneNode(true)
+        newTable.appendChild(emptyTable)
+    } else {
+        rows.forEach((row) => {
+            if (!!row) {
+                findAll('.collapsible td:not(.col-links', row).forEach(addItemToggleListener)
+                find('.logexpander', row).addEventListener('click',
+                    (evt) => evt.target.parentNode.classList.toggle('expanded'),
+                )
+                newTable.appendChild(row)
+            }
+        })
+    }
+
+    table.replaceWith(newTable)
+}
+
+const renderDerived = () => {
+    const currentFilter = getVisible()
+    possibleFilters.forEach((result) => {
+        const input = document.querySelector(`input[data-test-result="${result}"]`)
+        input.checked = currentFilter.includes(result)
+    })
+}
+
+const bindEvents = () => {
+    const filterColumn = (evt) => {
+        const { target: element } = evt
+        const { testResult } = element.dataset
+
+        doFilter(testResult, element.checked)
+        const collapsedIds = getCollapsedIds()
+        const updated = manager.renderData.tests.map((test) => {
+            return {
+                ...test,
+                collapsed: collapsedIds.includes(test.id),
+            }
+        })
+        manager.setRender(updated)
+        redraw()
+    }
+
+    const header = document.getElementById('environment-header')
+    header.addEventListener('click', () => {
+        const table = document.getElementById('environment')
+        table.classList.toggle('hidden')
+        header.classList.toggle('collapsed')
+    })
+
+    findAll('input[name="filter_checkbox"]').forEach((elem) => {
+        elem.addEventListener('click', filterColumn)
+    })
+
+    findAll('.sortable').forEach((elem) => {
+        elem.addEventListener('click', (evt) => {
+            const { target: element } = evt
+            const { columnType } = element.dataset
+            doSort(columnType)
+            redraw()
+        })
+    })
+
+    document.getElementById('show_all_details').addEventListener('click', () => {
+        manager.allCollapsed = false
+        setCollapsedIds([])
+        redraw()
+    })
+    document.getElementById('hide_all_details').addEventListener('click', () => {
+        manager.allCollapsed = true
+        const allIds = manager.renderData.tests.map((test) => test.id)
+        setCollapsedIds(allIds)
+        redraw()
+    })
+}
+
+const redraw = () => {
+    const { testSubset } = manager
+
+    renderContent(testSubset)
+    renderDerived()
+}
+
+module.exports = {
+    redraw,
+    bindEvents,
+    renderStatic,
+}
+
+},{"./datamanager.js":1,"./dom.js":2,"./filter.js":3,"./sort.js":7,"./storage.js":8}],6:[function(require,module,exports){
+class MediaViewer {
+    constructor(assets) {
+        this.assets = assets
+        this.index = 0
+    }
+
+    nextActive() {
+        this.index = this.index === this.assets.length - 1 ? 0 : this.index + 1
+        return [this.activeFile, this.index]
+    }
+
+    prevActive() {
+        this.index = this.index === 0 ? this.assets.length - 1 : this.index -1
+        return [this.activeFile, this.index]
+    }
+
+    get currentIndex() {
+        return this.index
+    }
+
+    get activeFile() {
+        return this.assets[this.index]
+    }
+}
+
+
+const setup = (resultBody, assets) => {
+    if (!assets.length) {
+        resultBody.querySelector('.media').classList.add('hidden')
+        return
+    }
+
+    const mediaViewer = new MediaViewer(assets)
+    const container = resultBody.querySelector('.media-container')
+    const leftArrow = resultBody.querySelector('.media-container__nav--left')
+    const rightArrow = resultBody.querySelector('.media-container__nav--right')
+    const mediaName = resultBody.querySelector('.media__name')
+    const counter = resultBody.querySelector('.media__counter')
+    const imageEl = resultBody.querySelector('img')
+    const sourceEl = resultBody.querySelector('source')
+    const videoEl = resultBody.querySelector('video')
+
+    const setImg = (media, index) => {
+        if (media?.format_type === 'image') {
+            imageEl.src = media.path
+
+            imageEl.classList.remove('hidden')
+            videoEl.classList.add('hidden')
+        } else if (media?.format_type === 'video') {
+            sourceEl.src = media.path
+
+            videoEl.classList.remove('hidden')
+            imageEl.classList.add('hidden')
+        }
+
+        mediaName.innerText = media?.name
+        counter.innerText = `${index + 1} / ${assets.length}`
+    }
+    setImg(mediaViewer.activeFile, mediaViewer.currentIndex)
+
+    const moveLeft = () => {
+        const [media, index] = mediaViewer.prevActive()
+        setImg(media, index)
+    }
+    const doRight = () => {
+        const [media, index] = mediaViewer.nextActive()
+        setImg(media, index)
+    }
+    const openImg = () => {
+        window.open(mediaViewer.activeFile.path, '_blank')
+    }
+    if (assets.length === 1) {
+        container.classList.add('media-container--fullscreen')
+    } else {
+        leftArrow.addEventListener('click', moveLeft)
+        rightArrow.addEventListener('click', doRight)
+    }
+    imageEl.addEventListener('click', openImg)
+}
+
+module.exports = {
+    setup,
+}
+
+},{}],7:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const storageModule = require('./storage.js')
+
+const genericSort = (list, key, ascending, customOrder) => {
+    let sorted
+    if (customOrder) {
+        sorted = list.sort((a, b) => {
+            const aValue = a.result.toLowerCase()
+            const bValue = b.result.toLowerCase()
+
+            const aIndex = customOrder.findIndex((item) => item.toLowerCase() === aValue)
+            const bIndex = customOrder.findIndex((item) => item.toLowerCase() === bValue)
+
+            // Compare the indices to determine the sort order
+            return aIndex - bIndex
+        })
+    } else {
+        sorted = list.sort((a, b) => a[key] === b[key] ? 0 : a[key] > b[key] ? 1 : -1)
+    }
+
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const durationSort = (list, ascending) => {
+    const parseDuration = (duration) => {
+        if (duration.includes(':')) {
+            // If it's in the format "HH:mm:ss"
+            const [hours, minutes, seconds] = duration.split(':').map(Number)
+            return (hours * 3600 + minutes * 60 + seconds) * 1000
+        } else {
+            // If it's in the format "nnn ms"
+            return parseInt(duration)
+        }
+    }
+    const sorted = list.sort((a, b) => parseDuration(a['duration']) - parseDuration(b['duration']))
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const doInitSort = () => {
+    const type = storageModule.getSort(manager.initialSort)
+    const ascending = storageModule.getSortDirection()
+    const list = manager.testSubset
+    const initialOrder = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed', 'Skipped', 'Passed']
+
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    if (type?.toLowerCase() === 'original') {
+        manager.setRender(list)
+    } else {
+        let sortedList
+        switch (type) {
+        case 'duration':
+            sortedList = durationSort(list, ascending)
+            break
+        case 'result':
+            sortedList = genericSort(list, type, ascending, initialOrder)
+            break
+        default:
+            sortedList = genericSort(list, type, ascending)
+            break
+        }
+        manager.setRender(sortedList)
+    }
+}
+
+const doSort = (type, skipDirection) => {
+    const newSortType = storageModule.getSort(manager.initialSort) !== type
+    const currentAsc = storageModule.getSortDirection()
+    let ascending
+    if (skipDirection) {
+        ascending = currentAsc
+    } else {
+        ascending = newSortType ? false : !currentAsc
+    }
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    const list = manager.testSubset
+    const sortedList = type === 'duration' ? durationSort(list, ascending) : genericSort(list, type, ascending)
+    manager.setRender(sortedList)
+}
+
+module.exports = {
+    doInitSort,
+    doSort,
+}
+
+},{"./datamanager.js":1,"./storage.js":8}],8:[function(require,module,exports){
+const possibleFilters = [
+    'passed',
+    'skipped',
+    'failed',
+    'error',
+    'xfailed',
+    'xpassed',
+    'rerun',
+]
+
+const getVisible = () => {
+    const url = new URL(window.location.href)
+    const settings = new URLSearchParams(url.search).get('visible')
+    const lower = (item) => {
+        const lowerItem = item.toLowerCase()
+        if (possibleFilters.includes(lowerItem)) {
+            return lowerItem
+        }
+        return null
+    }
+    return settings === null ?
+        possibleFilters :
+        [...new Set(settings?.split(',').map(lower).filter((item) => item))]
+}
+
+const hideCategory = (categoryToHide) => {
+    const url = new URL(window.location.href)
+    const visibleParams = new URLSearchParams(url.search).get('visible')
+    const currentVisible = visibleParams ? visibleParams.split(',') : [...possibleFilters]
+    const settings = [...new Set(currentVisible)].filter((f) => f !== categoryToHide).join(',')
+
+    url.searchParams.set('visible', settings)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const showCategory = (categoryToShow) => {
+    if (typeof window === 'undefined') {
+        return
+    }
+    const url = new URL(window.location.href)
+    const currentVisible = new URLSearchParams(url.search).get('visible')?.split(',').filter(Boolean) ||
+        [...possibleFilters]
+    const settings = [...new Set([categoryToShow, ...currentVisible])]
+    const noFilter = possibleFilters.length === settings.length || !settings.length
+
+    noFilter ? url.searchParams.delete('visible') : url.searchParams.set('visible', settings.join(','))
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getSort = (initialSort) => {
+    const url = new URL(window.location.href)
+    let sort = new URLSearchParams(url.search).get('sort')
+    if (!sort) {
+        sort = initialSort || 'result'
+    }
+    return sort
+}
+
+const setSort = (type) => {
+    const url = new URL(window.location.href)
+    url.searchParams.set('sort', type)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getCollapsedCategory = (renderCollapsed) => {
+    let categories
+    if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        const collapsedItems = new URLSearchParams(url.search).get('collapsed')
+        switch (true) {
+        case !renderCollapsed && collapsedItems === null:
+            categories = ['passed']
+            break
+        case collapsedItems?.length === 0 || /^["']{2}$/.test(collapsedItems):
+            categories = []
+            break
+        case /^all$/.test(collapsedItems) || collapsedItems === null && /^all$/.test(renderCollapsed):
+            categories = [...possibleFilters]
+            break
+        default:
+            categories = collapsedItems?.split(',').map((item) => item.toLowerCase()) || renderCollapsed
+            break
+        }
+    } else {
+        categories = []
+    }
+    return categories
+}
+
+const getSortDirection = () => JSON.parse(sessionStorage.getItem('sortAsc')) || false
+const setSortDirection = (ascending) => sessionStorage.setItem('sortAsc', ascending)
+
+const getCollapsedIds = () => JSON.parse(sessionStorage.getItem('collapsedIds')) || []
+const setCollapsedIds = (list) => sessionStorage.setItem('collapsedIds', JSON.stringify(list))
+
+module.exports = {
+    getVisible,
+    hideCategory,
+    showCategory,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    setSort,
+    getSortDirection,
+    setSortDirection,
+    getCollapsedCategory,
+    possibleFilters,
+}
+
+},{}]},{},[4]);
+    </script>
+  </footer>
+  </body>
+</html>

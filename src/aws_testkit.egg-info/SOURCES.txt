@@ -1,0 +1,12 @@
+README.md
+pyproject.toml
+src/aws_testkit/__init__.py
+src/aws_testkit/aws_clients.py
+src/aws_testkit/config.py
+src/aws_testkit/utils.py
+src/aws_testkit.egg-info/PKG-INFO
+src/aws_testkit.egg-info/SOURCES.txt
+src/aws_testkit.egg-info/dependency_links.txt
+src/aws_testkit.egg-info/requires.txt
+src/aws_testkit.egg-info/top_level.txt
+tests/test_aws_connectivity.py

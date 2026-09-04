@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title id="head-title">cloudwatch-logs-report.html</title>
+      <style type="text/css">body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  /* do not increase min-width as some may use split screens */
+  min-width: 800px;
+  color: #999;
+}
+
+h1 {
+  font-size: 24px;
+  color: black;
+}
+
+h2 {
+  font-size: 16px;
+  color: black;
+}
+
+p {
+  color: black;
+}
+
+a {
+  color: #999;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+/******************************
+ * SUMMARY INFORMATION
+ ******************************/
+#environment td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  vertical-align: top;
+}
+#environment tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+#environment ul {
+  margin: 0;
+  padding: 0 20px;
+}
+
+/******************************
+ * TEST RESULT COLORS
+ ******************************/
+span.passed,
+.passed .col-result {
+  color: green;
+}
+
+span.skipped,
+span.xfailed,
+span.rerun,
+.skipped .col-result,
+.xfailed .col-result,
+.rerun .col-result {
+  color: orange;
+}
+
+span.error,
+span.failed,
+span.xpassed,
+.error .col-result,
+.failed .col-result,
+.xpassed .col-result {
+  color: red;
+}
+
+.col-links__extra {
+  margin-right: 3px;
+}
+
+/******************************
+ * RESULTS TABLE
+ *
+ * 1. Table Layout
+ * 2. Extra
+ * 3. Sorting items
+ *
+ ******************************/
+/*------------------
+ * 1. Table Layout
+ *------------------*/
+#results-table {
+  border: 1px solid #e6e6e6;
+  color: #999;
+  font-size: 12px;
+  width: 100%;
+}
+#results-table th,
+#results-table td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  text-align: left;
+}
+#results-table th {
+  font-weight: bold;
+}
+
+/*------------------
+ * 2. Extra
+ *------------------*/
+.logwrapper {
+  max-height: 230px;
+  overflow-y: scroll;
+  background-color: #e6e6e6;
+}
+.logwrapper.expanded {
+  max-height: none;
+}
+.logwrapper.expanded .logexpander:after {
+  content: "collapse [-]";
+}
+.logwrapper .logexpander {
+  z-index: 1;
+  position: sticky;
+  top: 10px;
+  width: max-content;
+  border: 1px solid;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin: 10px 0 10px calc(100% - 80px);
+  cursor: pointer;
+  background-color: #e6e6e6;
+}
+.logwrapper .logexpander:after {
+  content: "expand [+]";
+}
+.logwrapper .logexpander:hover {
+  color: #000;
+  border-color: #000;
+}
+.logwrapper .log {
+  min-height: 40px;
+  position: relative;
+  top: -50px;
+  height: calc(100% + 50px);
+  border: 1px solid #e6e6e6;
+  color: black;
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  padding: 5px;
+  padding-right: 80px;
+  white-space: pre-wrap;
+}
+
+div.media {
+  border: 1px solid #e6e6e6;
+  float: right;
+  height: 240px;
+  margin: 0 5px;
+  overflow: hidden;
+  width: 320px;
+}
+
+.media-container {
+  display: grid;
+  grid-template-columns: 25px auto 25px;
+  align-items: center;
+  flex: 1 1;
+  overflow: hidden;
+  height: 200px;
+}
+
+.media-container--fullscreen {
+  grid-template-columns: 0px auto 0px;
+}
+
+.media-container__nav--right,
+.media-container__nav--left {
+  text-align: center;
+  cursor: pointer;
+}
+
+.media-container__viewport {
+  cursor: pointer;
+  text-align: center;
+  height: inherit;
+}
+.media-container__viewport img,
+.media-container__viewport video {
+  object-fit: cover;
+  width: 100%;
+  max-height: 100%;
+}
+
+.media__name,
+.media__counter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex: 0 0 25px;
+  align-items: center;
+}
+
+.collapsible td:not(.col-links) {
+  cursor: pointer;
+}
+.collapsible td:not(.col-links):hover::after {
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.col-result {
+  width: 130px;
+}
+.col-result:hover::after {
+  content: " (hide details)";
+}
+
+.col-result.collapsed:hover::after {
+  content: " (show details)";
+}
+
+#environment-header h2:hover::after {
+  content: " (hide details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#environment-header.collapsed h2:hover::after {
+  content: " (show details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/*------------------
+ * 3. Sorting items
+ *------------------*/
+.sortable {
+  cursor: pointer;
+}
+.sortable.desc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: -12.5px;
+  border: 10px solid #4caf50;
+  border-bottom: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+.sortable.asc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: 12.5px;
+  border: 10px solid #4caf50;
+  border-top: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+
+.hidden, .summary__reload__button.hidden {
+  display: none;
+}
+
+.summary__data {
+  flex: 0 0 550px;
+}
+.summary__reload {
+  flex: 1 1;
+  display: flex;
+  justify-content: center;
+}
+.summary__reload__button {
+  flex: 0 0 300px;
+  display: flex;
+  color: white;
+  font-weight: bold;
+  background-color: #4caf50;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.summary__reload__button:hover {
+  background-color: #46a049;
+}
+.summary__spacer {
+  flex: 0 0 550px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filters,
+.collapse {
+  display: flex;
+  align-items: center;
+}
+.filters button,
+.collapse button {
+  color: #999;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.filters button:hover,
+.collapse button:hover {
+  color: #ccc;
+}
+
+.filter__label {
+  margin-right: 10px;
+}
+
+      </style>
+    
+  </head>
+  <body>
+    <h1 id="title">cloudwatch-logs-report.html</h1>
+    <p>Report generated on 18-Feb-2026 at 16:49:23 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a>
+        v4.2.0</p>
+    <div id="environment-header">
+      <h2>Environment</h2>
+    </div>
+    <table id="environment"></table>
+    <!-- TEMPLATES -->
+      <template id="template_environment_row">
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+    </template>
+    <template id="template_results-table__body--empty">
+      <tbody class="results-table-row">
+        <tr id="not-found-message">
+          <td colspan="4">No results found. Check the filters.</td>
+        </tr>
+      </tbody>
+    </template>
+    <template id="template_results-table__tbody">
+      <tbody class="results-table-row">
+        <tr class="collapsible">
+        </tr>
+        <tr class="extras-row">
+          <td class="extra" colspan="4">
+            <div class="extraHTML"></div>
+            <div class="media">
+              <div class="media-container">
+                  <div class="media-container__nav--left">&lt;</div>
+                  <div class="media-container__viewport">
+                    <img src="" />
+                    <video controls>
+                      <source src="" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="media-container__nav--right">&gt;</div>
+                </div>
+                <div class="media__name"></div>
+                <div class="media__counter"></div>
+            </div>
+            <div class="logwrapper">
+              <div class="logexpander"></div>
+              <div class="log"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </template>
+    <!-- END TEMPLATES -->
+    <div class="summary">
+      <div class="summary__data">
+        <h2>Summary</h2>
+        <div class="additional-summary prefix">
+        </div>
+        <p class="run-count">3 tests took 00:00:08.</p>
+        <p class="filter">(Un)check the boxes to filter the results.</p>
+        <div class="summary__reload">
+          <div class="summary__reload__button hidden" onclick="location.reload()">
+            <div>There are still tests running. <br />Reload this page to get the latest results!</div>
+          </div>
+        </div>
+        <div class="summary__spacer"></div>
+        <div class="controls">
+          <div class="filters">
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="failed" disabled>
+            <span class="failed">0 Failed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="passed" >
+            <span class="passed">3 Passed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="skipped" disabled>
+            <span class="skipped">0 Skipped,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xfailed" disabled>
+            <span class="xfailed">0 Expected failures,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xpassed" disabled>
+            <span class="xpassed">0 Unexpected passes,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="error" disabled>
+            <span class="error">0 Errors,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="rerun" disabled>
+            <span class="rerun">0 Reruns</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="retried" disabled>
+            <span class="retried">0 Retried,</span>
+          </div>
+          <div class="collapse">
+            <button id="show_all_details">Show all details</button>&nbsp;/&nbsp;<button id="hide_all_details">Hide all details</button>
+          </div>
+        </div>
+      </div>
+      <div class="additional-summary summary">
+      </div>
+      <div class="additional-summary postfix">
+      </div>
+    </div>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable" data-column-type="result">Result</th>
+          <th class="sortable" data-column-type="testId">Test</th>
+          <th class="sortable" data-column-type="duration">Duration</th>
+          <th>Links</th>
+        </tr>
+      </thead>
+    </table>
+  <footer>
+    <div id="data-container" data-jsonblob="{&#34;environment&#34;: {&#34;Python&#34;: &#34;3.14.0&#34;, &#34;Platform&#34;: &#34;Windows-11-10.0.26100-SP0&#34;, &#34;Packages&#34;: {&#34;pytest&#34;: &#34;9.0.2&#34;, &#34;pluggy&#34;: &#34;1.6.0&#34;}, &#34;Plugins&#34;: {&#34;allure-pytest&#34;: &#34;2.15.3&#34;, &#34;bdd&#34;: &#34;8.1.0&#34;, &#34;html&#34;: &#34;4.2.0&#34;, &#34;metadata&#34;: &#34;3.1.1&#34;}, &#34;JAVA_HOME&#34;: &#34;C:\\Program Files\\Java\\jdk-11&#34;}, &#34;tests&#34;: {&#34;tests/features/steps/test_cloudwatch_logs_steps.py::test_cloudwatch_log_group_exists_and_is_accessible&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/features/steps/test_cloudwatch_logs_steps.py::test_cloudwatch_log_group_exists_and_is_accessible&#34;, &#34;duration&#34;: &#34;654 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/features/steps/test_cloudwatch_logs_steps.py::test_cloudwatch_log_group_exists_and_is_accessible&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;654 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:59 Log group: /aws/lambda/ac-odh-Trax-Aircraft-Extractor-intca1  Region: ca-central-1\nINFO     botocore.credentials:credentials.py:1392 Found credentials in shared credentials file: ~/.aws/credentials\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:120 PASS \u2014 Log group &amp;#x27;/aws/lambda/ac-odh-Trax-Aircraft-Extractor-intca1&amp;#x27; exists and is accessible\n\n&#34;}], &#34;tests/features/steps/test_cloudwatch_logs_steps.py::test_trax_aircraft_extractor_completed_successfully&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/features/steps/test_cloudwatch_logs_steps.py::test_trax_aircraft_extractor_completed_successfully&#34;, &#34;duration&#34;: &#34;00:00:07&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/features/steps/test_cloudwatch_logs_steps.py::test_trax_aircraft_extractor_completed_successfully&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:07&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:59 Log group: /aws/lambda/ac-odh-Trax-Aircraft-Extractor-intca1  Region: ca-central-1\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:75 Searching log group &amp;#x27;/aws/lambda/ac-odh-Trax-Aircraft-Extractor-intca1&amp;#x27; for: Trax Aircraft Extractor completed successfully\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:87 Found 29 event(s) matching &amp;#x27;Trax Aircraft Extractor completed successfully&amp;#x27;\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:132 PASS \u2014 Found 29 matching event(s) (minimum: 1)\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:142 ================================================================================\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:143 MATCHING LOG EVENTS for: &amp;#x27;Trax Aircraft Extractor completed successfully&amp;#x27;\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:144 Log group: /aws/lambda/ac-odh-Trax-Aircraft-Extractor-intca1\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:145 Total matches: 29\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:146 ================================================================================\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #1\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-12 19:46:48 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/12/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]c85f790a89f4460c8f5051a5c0754dfa\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-12T19:46:48.030Z\t4f041615-a987-4bf7-b813-9e0a96aec55b\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-12T19:46:48.030Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:17653}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #2\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-12 20:11:46 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/12/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]22f597b61aaa4abe9ed4ffe530a320e3\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-12T20:11:46.931Z\tb07983d3-752f-4035-8e26-6ca024a959ea\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-12T20:11:46.931Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:22376}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #3\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-13 00:05:09 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/13/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]5e7dc5f42b8843c8a985632e65a73668\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-13T00:05:09.451Z\t56c65f60-4e3a-4038-9d94-6cb78429b524\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-13T00:05:09.451Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:22507}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #4\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-13 06:05:08 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/13/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]3bbc0d59e20b44f1b0b92adfd4a67ba2\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-13T06:05:08.965Z\t28c7c1fa-2497-44a5-9a1c-398db8c6d5b7\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-13T06:05:08.965Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:22283}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #5\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-13 12:05:06 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/13/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]cbe13b86ac7b4acb811d5c42426a9849\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-13T12:05:06.416Z\t73ba4364-626f-41fb-b901-fdd83a4a166e\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-13T12:05:06.416Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:19748}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #6\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-13 18:05:06 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/13/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]b6fd05b1329141ab9e7bf7ef966f8874\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-13T18:05:06.349Z\tee907c9c-93a2-42e6-971e-204667235596\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-13T18:05:06.349Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:19345}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #7\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-13 23:05:27 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/13/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]5b25488ec7cf4521a3966b178c6f88ed\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-13T23:05:27.464Z\tf9ae9510-9097-4ebb-b219-acd554a867d4\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-13T23:05:27.464Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:18635}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #8\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-14 00:05:06 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/14/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]52f945ed23ea4e2b9a0a1fdd59986e55\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-14T00:05:06.768Z\t6c57bd6d-b94a-43fe-9dbb-e68c6670822e\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-14T00:05:06.768Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:19925}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #9\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-14 06:05:06 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/14/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]55f9217bddbb4448bbe9771fc5f74799\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-14T06:05:06.073Z\t7c5f750c-802b-43b1-a603-1e23329a803a\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-14T06:05:06.073Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:19138}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #10\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-14 12:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/14/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]bf3d1f6becf74059a77de6e39b7761a1\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-14T12:05:03.710Z\t6cb4d405-d4a8-4ac8-a904-1e9c2b42b368\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-14T12:05:03.710Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:16944}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #11\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-14 18:05:06 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/14/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]9188ed6da457430dbd39dc7cfa3784ba\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-14T18:05:06.222Z\t57197fe4-b9a5-4f87-b0ef-f8fefc295b0b\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-14T18:05:06.222Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:19337}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #12\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-15 00:05:05 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/15/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]11152ba141f94f7fa84e813bbcfd821b\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-15T00:05:05.404Z\t6b891565-102c-4033-bc77-1498da6920ce\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-15T00:05:05.404Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:18611}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #13\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-15 06:05:07 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/15/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]ef39bcefebef4b05a5fa38cf3fb84db1\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-15T06:05:07.105Z\t4838077c-7d48-4301-890b-daba9a87c224\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-15T06:05:07.105Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:20316}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #14\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-15 12:05:06 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/15/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]34e41383fd5d4f4592d0b1127417b315\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-15T12:05:06.575Z\t929b2ab9-0512-42c9-bc01-8f093c260897\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-15T12:05:06.575Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:19677}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #15\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-15 18:05:07 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/15/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]619158862f144f59a5a0774038848810\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-15T18:05:07.397Z\t194a5f55-2c09-4146-b339-ca4671ae09a3\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-15T18:05:07.397Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:20599}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #16\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-16 00:05:06 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/16/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]6ef49fc874ce45b682f81a9b320edf5b\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-16T00:05:06.125Z\tf3a39a4e-56f2-4396-b5f9-2f7e35b30f5f\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-16T00:05:06.125Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:19587}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #17\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-16 06:05:06 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/16/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]d7dbb58bcfec48f6b01fb06af87bb433\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-16T06:05:06.106Z\t0b8f24bd-6462-427d-be77-269d05c689f8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-16T06:05:06.106Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:19112}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #18\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-16 12:05:06 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/16/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]1070752ff4f74b1297b1068dc6170fd3\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-16T12:05:06.409Z\t1a7d8be6-42b3-4d33-a2b0-382d35bd617e\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-16T12:05:06.409Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:19500}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #19\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-16 18:05:07 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/16/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]ace6b921af544f3b8000d128d673d356\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-16T18:05:07.505Z\tcb25a581-2a8b-4442-8b73-d248d32cd29e\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-16T18:05:07.505Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:20485}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #20\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-16 18:49:42 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/16/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]b70845b8ffa64bbf9e19fda1f3aa448c\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-16T18:49:42.006Z\t3c6f64d4-fabc-4ac5-a6fe-2f65ac4f6e2b\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-16T18:49:42.006Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:17244}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #21\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-17 00:05:06 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/17/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]5c1f3e0d6418403d956d8d53278578c6\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-17T00:05:06.835Z\t7b12020c-3e35-4919-bc61-412acdf1781d\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-17T00:05:06.835Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:20079}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #22\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-17 06:05:08 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/17/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]f2007481899b46f0a0d622573ebbe8fa\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-17T06:05:08.436Z\t48f37cd8-f7e6-4d30-a8be-f22e53c2d722\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-17T06:05:08.436Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:21577}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #23\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-17 12:05:05 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/17/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]746327cb0edf47e19229298db2426cf9\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-17T12:05:05.016Z\t908f7014-7a04-445d-9c46-2004e6c80793\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-17T12:05:05.016Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:18128}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #24\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-17 18:05:06 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/17/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]5afb1b7d7bc341cc9073a62c3fc0de64\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-17T18:05:06.869Z\tc29bf259-9ba3-46b4-815b-32e0653ef25e\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-17T18:05:06.869Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:19966}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #25\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-18 00:05:09 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/18/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]37cb28ae5e4945f8b8cf1e81b55c47b1\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-18T00:05:09.096Z\t54af7e9f-d47f-4097-94d4-809d6a1a0a48\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T00:05:09.096Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:22322}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #26\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-18 06:05:10 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/18/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]70ce9ff216b141d987359cf1fc6070fd\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-18T06:05:10.858Z\t60ce0cb9-fe65-4e2b-8495-a12773a827cb\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T06:05:10.858Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:23977}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #27\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-18 12:05:08 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/18/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]f39ea9a971a948869ae461047b03a14e\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-18T12:05:08.462Z\tabfcd416-b702-4a97-8807-14c87495a8e6\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T12:05:08.462Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:21868}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #28\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-18 13:42:26 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/18/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]4bba594ef2b146f4b69cd3c2b9a3c019\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-18T13:42:26.717Z\t1e144f70-7e07-4032-a8a6-9c64adfc2d0e\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T13:42:26.717Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:23153}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:155 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:156 Event #29\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:157   Timestamp : 2026-02-18 18:05:04 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:158   Stream    : 2026/02/18/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]9c72dbf6beed49c9a18c704294e15903\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:166   Message   : 2026-02-18T18:05:04.246Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:04.246Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:17635}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:168 ================================================================================\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:169 PASS \u2014 All 29 matching event(s) printed successfully\n\n&#34;}], &#34;tests/features/steps/test_cloudwatch_logs_steps.py::test_print_the_latest_log_events_from_the_most_recent_stream&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/features/steps/test_cloudwatch_logs_steps.py::test_print_the_latest_log_events_from_the_most_recent_stream&#34;, &#34;duration&#34;: &#34;638 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/features/steps/test_cloudwatch_logs_steps.py::test_print_the_latest_log_events_from_the_most_recent_stream&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;638 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:59 Log group: /aws/lambda/ac-odh-Trax-Aircraft-Extractor-intca1  Region: ca-central-1\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:102 Most recent stream: 2026/02/18/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]9c72dbf6beed49c9a18c704294e15903\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:108 Fetched 50 event(s) from stream &amp;#x27;2026/02/18/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]9c72dbf6beed49c9a18c704294e15903&amp;#x27;\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:180 PASS \u2014 Found 50 event(s) (minimum: 1)\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:187 ================================================================================\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:188 LATEST LOG EVENTS from stream: 2026/02/18/ac-odh-Trax-Aircraft-Extractor-intca1[$LATEST]9c72dbf6beed49c9a18c704294e15903\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:189 Log group: /aws/lambda/ac-odh-Trax-Aircraft-Extractor-intca1\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:190 Total events: 50\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:191 ================================================================================\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #1\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:01 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:01.899Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:01.899Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-497S-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;497S&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;497S&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #2\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:01 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:01.946Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:01.946Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-599S-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;599S&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;599S&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #3\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:01 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:01.979Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:01.979Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-598S-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;598S&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;598S&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #4\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.012Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.012Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-698S-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;698S&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;698S&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #5\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.063Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.063Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-899S-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;899S&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;899S&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #6\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.106Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.106Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-898S-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;898S&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;898S&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #7\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.145Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.145Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-799S-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;799S&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;799S&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #8\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.274Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.274Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-A330-9X-92-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;A330-9X-92&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;A330-9XX-WV92&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #9\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.323Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.323Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-A330-2X-8X-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;A330-2X-8X&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;A330-2XX-WV08X&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #10\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.379Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.379Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-A330-3X-8X-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;A330-3X-8X&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;A330-3XX-WV08X&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #11\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.426Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.426Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-A340-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;A340&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;MMA340&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #12\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.475Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.475Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-A340-3X-20-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;A340-3X-20&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;A340-3XX-WV020&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #13\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.524Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.524Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-A330-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;A330&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;MMA330&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #14\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.570Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.570Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-467-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;467&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;5328&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #15\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.619Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.618Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-483-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;483&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;5808&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #16\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.654Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.654Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-A320-2X-10-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;A320-2X-10&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;A320-2XX-WV010&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #17\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.690Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.690Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-571-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;571&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;63384&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #18\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.742Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.742Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-573-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;573&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;63385&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #19\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.790Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.790Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-574-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;574&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;66476&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #20\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.833Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.833Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-576-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;576&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;66478&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #21\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.875Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.875Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-577-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;577&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;63388&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #22\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:02 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:02.954Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:02.954Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-578-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;578&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;66479&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #23\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.016Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.016Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-306-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;306&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;13096&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #24\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.063Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.063Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-301-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;301&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;12696&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #25\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.113Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.112Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-545-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;545&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;68133&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #26\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.177Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.177Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-949-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;949&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;1427&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #27\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.209Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.209Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-950-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;950&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;1105&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #28\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.251Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.251Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-146-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;146&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;55452&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #29\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.309Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.309Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-147-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;147&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;55455&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #30\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.366Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.366Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-148-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;148&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;55457&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #31\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.429Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.429Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-149-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;149&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;55466&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #32\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.484Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.484Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-150-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;150&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;55471&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #33\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.529Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.529Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-151-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;151&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;55400&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #34\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.561Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.561Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-152-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;152&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;55474&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #35\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.621Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.621Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-153-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;153&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;55477&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #36\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.664Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.664Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-154-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;154&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;55479&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #37\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.707Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.707Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-155-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;155&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;55485&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #38\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.754Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.754Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-156-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;156&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;55490&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #39\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.805Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.805Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-157-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;157&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;55497&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #40\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.838Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.838Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-158-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;158&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;TBD&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #41\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.889Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.889Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-159-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;159&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;TBD&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #42\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:03 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:03.955Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:03.955Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-160-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;160&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;TBD&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #43\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:04 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:04.003Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:04.002Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-161-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;161&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;TBD&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #44\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:04 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:04.060Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:04.060Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-163-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;163&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;TBD&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #45\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:04 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:04.092Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:04.092Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-162-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;162&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;TBD&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #46\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:04 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:04.150Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:04.150Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-164-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;164&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;TBD&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #47\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:04 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:04.202Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:04.202Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;DEBUG&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Stored aircraft event in S3&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;s3Key&amp;quot;:&amp;quot;CDM/CDM-AIRCRAFT-ODH-INT/aircraft-165-2026-02-18T18-04-47-283Z.json&amp;quot;,&amp;quot;fin&amp;quot;:&amp;quot;165&amp;quot;,&amp;quot;serialNumber&amp;quot;:&amp;quot;TBD&amp;quot;}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #48\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:04 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : 2026-02-18T18:05:04.246Z\t6dccc90c-72db-45e7-9034-073cddc80cd8\tINFO\t{&amp;quot;timestamp&amp;quot;:&amp;quot;2026-02-18T18:05:04.246Z&amp;quot;,&amp;quot;level&amp;quot;:&amp;quot;INFO&amp;quot;,&amp;quot;module&amp;quot;:&amp;quot;Trax-Aircraft-Extractor&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Trax Aircraft Extractor completed successfully&amp;quot;,&amp;quot;environment&amp;quot;:&amp;quot;INTCA1&amp;quot;,&amp;quot;serviceName&amp;quot;:&amp;quot;ac-odh-airport-data&amp;quot;,&amp;quot;totalRecords&amp;quot;:350,&amp;quot;successCount&amp;quot;:350,&amp;quot;failureCount&amp;quot;:0,&amp;quot;durationMs&amp;quot;:17635}\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #49\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:04 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : END RequestId: 6dccc90c-72db-45e7-9034-073cddc80cd8\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:200 --------------------------------------------------------------------------------\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:201 Event #50\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:202   Timestamp : 2026-02-18 18:05:04 UTC\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:210   Message   : REPORT RequestId: 6dccc90c-72db-45e7-9034-073cddc80cd8\tDuration: 17638.60 ms\tBilled Duration: 18458 ms\tMemory Size: 1024 MB\tMax Memory Used: 142 MB\tInit Duration: 819.39 ms\t\nXRAY TraceId: 1-6995ff3d-752519f664ed7c5030ab6042\tSegmentId: c0647d8eeebd1d71\tSampled: true\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:212 ================================================================================\nINFO     tests.features.steps.test_cloudwatch_logs_steps:test_cloudwatch_logs_steps.py:213 PASS \u2014 All 50 event(s) printed\n\n&#34;}]}, &#34;renderCollapsed&#34;: [&#34;passed&#34;], &#34;initialSort&#34;: &#34;result&#34;, &#34;title&#34;: &#34;cloudwatch-logs-report.html&#34;}"></div>
+    <script>
+      (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const { getCollapsedCategory, setCollapsedIds } = require('./storage.js')
+
+class DataManager {
+    setManager(data) {
+        const collapsedCategories = [...getCollapsedCategory(data.renderCollapsed)]
+        const collapsedIds = []
+        const tests = Object.values(data.tests).flat().map((test, index) => {
+            const collapsed = collapsedCategories.includes(test.result.toLowerCase())
+            const id = `test_${index}`
+            if (collapsed) {
+                collapsedIds.push(id)
+            }
+            return {
+                ...test,
+                id,
+                collapsed,
+            }
+        })
+        const dataBlob = { ...data, tests }
+        this.data = { ...dataBlob }
+        this.renderData = { ...dataBlob }
+        setCollapsedIds(collapsedIds)
+    }
+
+    get allData() {
+        return { ...this.data }
+    }
+
+    resetRender() {
+        this.renderData = { ...this.data }
+    }
+
+    setRender(data) {
+        this.renderData.tests = [...data]
+    }
+
+    toggleCollapsedItem(id) {
+        this.renderData.tests = this.renderData.tests.map((test) =>
+            test.id === id ? { ...test, collapsed: !test.collapsed } : test,
+        )
+    }
+
+    set allCollapsed(collapsed) {
+        this.renderData = { ...this.renderData, tests: [...this.renderData.tests.map((test) => (
+            { ...test, collapsed }
+        ))] }
+    }
+
+    get testSubset() {
+        return [...this.renderData.tests]
+    }
+
+    get environment() {
+        return this.renderData.environment
+    }
+
+    get initialSort() {
+        return this.data.initialSort
+    }
+}
+
+module.exports = {
+    manager: new DataManager(),
+}
+
+},{"./storage.js":8}],2:[function(require,module,exports){
+const mediaViewer = require('./mediaviewer.js')
+const templateEnvRow = document.getElementById('template_environment_row')
+const templateResult = document.getElementById('template_results-table__tbody')
+
+function htmlToElements(html) {
+    const temp = document.createElement('template')
+    temp.innerHTML = html
+    return temp.content.childNodes
+}
+
+const find = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return elem.querySelector(selector)
+}
+
+const findAll = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return [...elem.querySelectorAll(selector)]
+}
+
+const dom = {
+    getStaticRow: (key, value) => {
+        const envRow = templateEnvRow.content.cloneNode(true)
+        const isObj = typeof value === 'object' && value !== null
+        const values = isObj ? Object.keys(value).map((k) => `${k}: ${value[k]}`) : null
+
+        const valuesElement = htmlToElements(
+            values ? `<ul>${values.map((val) => `<li>${val}</li>`).join('')}<ul>` : `<div>${value}</div>`)[0]
+        const td = findAll('td', envRow)
+        td[0].textContent = key
+        td[1].appendChild(valuesElement)
+
+        return envRow
+    },
+    getResultTBody: ({ testId, id, log, extras, resultsTableRow, tableHtml, result, collapsed }) => {
+        const resultBody = templateResult.content.cloneNode(true)
+        resultBody.querySelector('tbody').classList.add(result.toLowerCase())
+        resultBody.querySelector('tbody').id = testId
+        resultBody.querySelector('.collapsible').dataset.id = id
+
+        resultsTableRow.forEach((html) => {
+            const t = document.createElement('template')
+            t.innerHTML = html
+            resultBody.querySelector('.collapsible').appendChild(t.content)
+        })
+
+        if (log) {
+            // Wrap lines starting with "E" with span.error to color those lines red
+            const wrappedLog = log.replace(/^E.*$/gm, (match) => `<span class="error">${match}</span>`)
+            resultBody.querySelector('.log').innerHTML = wrappedLog
+        } else {
+            resultBody.querySelector('.log').remove()
+        }
+
+        if (collapsed) {
+            resultBody.querySelector('.collapsible > .col-result')?.classList.add('collapsed')
+            resultBody.querySelector('.extras-row').classList.add('hidden')
+        } else {
+            resultBody.querySelector('.collapsible > .col-result')?.classList.remove('collapsed')
+        }
+
+        const media = []
+        extras?.forEach(({ name, format_type, content }) => {
+            if (['image', 'video'].includes(format_type)) {
+                media.push({ path: content, name, format_type })
+            }
+
+            if (format_type === 'html') {
+                resultBody.querySelector('.extraHTML').insertAdjacentHTML('beforeend', `<div>${content}</div>`)
+            }
+        })
+        mediaViewer.setup(resultBody, media)
+
+        // Add custom html from the pytest_html_results_table_html hook
+        tableHtml?.forEach((item) => {
+            resultBody.querySelector('td[class="extra"]').insertAdjacentHTML('beforeend', item)
+        })
+
+        return resultBody
+    },
+}
+
+module.exports = {
+    dom,
+    htmlToElements,
+    find,
+    findAll,
+}
+
+},{"./mediaviewer.js":6}],3:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const storageModule = require('./storage.js')
+
+const getFilteredSubSet = (filter) =>
+    manager.allData.tests.filter(({ result }) => filter.includes(result.toLowerCase()))
+
+const doInitFilter = () => {
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+}
+
+const doFilter = (type, show) => {
+    if (show) {
+        storageModule.showCategory(type)
+    } else {
+        storageModule.hideCategory(type)
+    }
+
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+
+    const sortColumn = storageModule.getSort()
+    doSort(sortColumn, true)
+}
+
+module.exports = {
+    doFilter,
+    doInitFilter,
+}
+
+},{"./datamanager.js":1,"./sort.js":7,"./storage.js":8}],4:[function(require,module,exports){
+const { redraw, bindEvents, renderStatic } = require('./main.js')
+const { doInitFilter } = require('./filter.js')
+const { doInitSort } = require('./sort.js')
+const { manager } = require('./datamanager.js')
+const data = JSON.parse(document.getElementById('data-container').dataset.jsonblob)
+
+function init() {
+    manager.setManager(data)
+    doInitFilter()
+    doInitSort()
+    renderStatic()
+    redraw()
+    bindEvents()
+}
+
+init()
+
+},{"./datamanager.js":1,"./filter.js":3,"./main.js":5,"./sort.js":7}],5:[function(require,module,exports){
+const { dom, find, findAll } = require('./dom.js')
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const { doFilter } = require('./filter.js')
+const {
+    getVisible,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    getSortDirection,
+    possibleFilters,
+} = require('./storage.js')
+
+const removeChildren = (node) => {
+    while (node.firstChild) {
+        node.removeChild(node.firstChild)
+    }
+}
+
+const renderStatic = () => {
+    const renderEnvironmentTable = () => {
+        const environment = manager.environment
+        const rows = Object.keys(environment).map((key) => dom.getStaticRow(key, environment[key]))
+        const table = document.getElementById('environment')
+        removeChildren(table)
+        rows.forEach((row) => table.appendChild(row))
+    }
+    renderEnvironmentTable()
+}
+
+const addItemToggleListener = (elem) => {
+    elem.addEventListener('click', ({ target }) => {
+        const id = target.parentElement.dataset.id
+        manager.toggleCollapsedItem(id)
+
+        const collapsedIds = getCollapsedIds()
+        if (collapsedIds.includes(id)) {
+            const updated = collapsedIds.filter((item) => item !== id)
+            setCollapsedIds(updated)
+        } else {
+            collapsedIds.push(id)
+            setCollapsedIds(collapsedIds)
+        }
+        redraw()
+    })
+}
+
+const renderContent = (tests) => {
+    const sortAttr = getSort(manager.initialSort)
+    const sortAsc = JSON.parse(getSortDirection())
+    const rows = tests.map(dom.getResultTBody)
+    const table = document.getElementById('results-table')
+    const tableHeader = document.getElementById('results-table-head')
+
+    const newTable = document.createElement('table')
+    newTable.id = 'results-table'
+
+    // remove all sorting classes and set the relevant
+    findAll('.sortable', tableHeader).forEach((elem) => elem.classList.remove('asc', 'desc'))
+    tableHeader.querySelector(`.sortable[data-column-type="${sortAttr}"]`)?.classList.add(sortAsc ? 'desc' : 'asc')
+    newTable.appendChild(tableHeader)
+
+    if (!rows.length) {
+        const emptyTable = document.getElementById('template_results-table__body--empty').content.cloneNode(true)
+        newTable.appendChild(emptyTable)
+    } else {
+        rows.forEach((row) => {
+            if (!!row) {
+                findAll('.collapsible td:not(.col-links', row).forEach(addItemToggleListener)
+                find('.logexpander', row).addEventListener('click',
+                    (evt) => evt.target.parentNode.classList.toggle('expanded'),
+                )
+                newTable.appendChild(row)
+            }
+        })
+    }
+
+    table.replaceWith(newTable)
+}
+
+const renderDerived = () => {
+    const currentFilter = getVisible()
+    possibleFilters.forEach((result) => {
+        const input = document.querySelector(`input[data-test-result="${result}"]`)
+        input.checked = currentFilter.includes(result)
+    })
+}
+
+const bindEvents = () => {
+    const filterColumn = (evt) => {
+        const { target: element } = evt
+        const { testResult } = element.dataset
+
+        doFilter(testResult, element.checked)
+        const collapsedIds = getCollapsedIds()
+        const updated = manager.renderData.tests.map((test) => {
+            return {
+                ...test,
+                collapsed: collapsedIds.includes(test.id),
+            }
+        })
+        manager.setRender(updated)
+        redraw()
+    }
+
+    const header = document.getElementById('environment-header')
+    header.addEventListener('click', () => {
+        const table = document.getElementById('environment')
+        table.classList.toggle('hidden')
+        header.classList.toggle('collapsed')
+    })
+
+    findAll('input[name="filter_checkbox"]').forEach((elem) => {
+        elem.addEventListener('click', filterColumn)
+    })
+
+    findAll('.sortable').forEach((elem) => {
+        elem.addEventListener('click', (evt) => {
+            const { target: element } = evt
+            const { columnType } = element.dataset
+            doSort(columnType)
+            redraw()
+        })
+    })
+
+    document.getElementById('show_all_details').addEventListener('click', () => {
+        manager.allCollapsed = false
+        setCollapsedIds([])
+        redraw()
+    })
+    document.getElementById('hide_all_details').addEventListener('click', () => {
+        manager.allCollapsed = true
+        const allIds = manager.renderData.tests.map((test) => test.id)
+        setCollapsedIds(allIds)
+        redraw()
+    })
+}
+
+const redraw = () => {
+    const { testSubset } = manager
+
+    renderContent(testSubset)
+    renderDerived()
+}
+
+module.exports = {
+    redraw,
+    bindEvents,
+    renderStatic,
+}
+
+},{"./datamanager.js":1,"./dom.js":2,"./filter.js":3,"./sort.js":7,"./storage.js":8}],6:[function(require,module,exports){
+class MediaViewer {
+    constructor(assets) {
+        this.assets = assets
+        this.index = 0
+    }
+
+    nextActive() {
+        this.index = this.index === this.assets.length - 1 ? 0 : this.index + 1
+        return [this.activeFile, this.index]
+    }
+
+    prevActive() {
+        this.index = this.index === 0 ? this.assets.length - 1 : this.index -1
+        return [this.activeFile, this.index]
+    }
+
+    get currentIndex() {
+        return this.index
+    }
+
+    get activeFile() {
+        return this.assets[this.index]
+    }
+}
+
+
+const setup = (resultBody, assets) => {
+    if (!assets.length) {
+        resultBody.querySelector('.media').classList.add('hidden')
+        return
+    }
+
+    const mediaViewer = new MediaViewer(assets)
+    const container = resultBody.querySelector('.media-container')
+    const leftArrow = resultBody.querySelector('.media-container__nav--left')
+    const rightArrow = resultBody.querySelector('.media-container__nav--right')
+    const mediaName = resultBody.querySelector('.media__name')
+    const counter = resultBody.querySelector('.media__counter')
+    const imageEl = resultBody.querySelector('img')
+    const sourceEl = resultBody.querySelector('source')
+    const videoEl = resultBody.querySelector('video')
+
+    const setImg = (media, index) => {
+        if (media?.format_type === 'image') {
+            imageEl.src = media.path
+
+            imageEl.classList.remove('hidden')
+            videoEl.classList.add('hidden')
+        } else if (media?.format_type === 'video') {
+            sourceEl.src = media.path
+
+            videoEl.classList.remove('hidden')
+            imageEl.classList.add('hidden')
+        }
+
+        mediaName.innerText = media?.name
+        counter.innerText = `${index + 1} / ${assets.length}`
+    }
+    setImg(mediaViewer.activeFile, mediaViewer.currentIndex)
+
+    const moveLeft = () => {
+        const [media, index] = mediaViewer.prevActive()
+        setImg(media, index)
+    }
+    const doRight = () => {
+        const [media, index] = mediaViewer.nextActive()
+        setImg(media, index)
+    }
+    const openImg = () => {
+        window.open(mediaViewer.activeFile.path, '_blank')
+    }
+    if (assets.length === 1) {
+        container.classList.add('media-container--fullscreen')
+    } else {
+        leftArrow.addEventListener('click', moveLeft)
+        rightArrow.addEventListener('click', doRight)
+    }
+    imageEl.addEventListener('click', openImg)
+}
+
+module.exports = {
+    setup,
+}
+
+},{}],7:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const storageModule = require('./storage.js')
+
+const genericSort = (list, key, ascending, customOrder) => {
+    let sorted
+    if (customOrder) {
+        sorted = list.sort((a, b) => {
+            const aValue = a.result.toLowerCase()
+            const bValue = b.result.toLowerCase()
+
+            const aIndex = customOrder.findIndex((item) => item.toLowerCase() === aValue)
+            const bIndex = customOrder.findIndex((item) => item.toLowerCase() === bValue)
+
+            // Compare the indices to determine the sort order
+            return aIndex - bIndex
+        })
+    } else {
+        sorted = list.sort((a, b) => a[key] === b[key] ? 0 : a[key] > b[key] ? 1 : -1)
+    }
+
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const durationSort = (list, ascending) => {
+    const parseDuration = (duration) => {
+        if (duration.includes(':')) {
+            // If it's in the format "HH:mm:ss"
+            const [hours, minutes, seconds] = duration.split(':').map(Number)
+            return (hours * 3600 + minutes * 60 + seconds) * 1000
+        } else {
+            // If it's in the format "nnn ms"
+            return parseInt(duration)
+        }
+    }
+    const sorted = list.sort((a, b) => parseDuration(a['duration']) - parseDuration(b['duration']))
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const doInitSort = () => {
+    const type = storageModule.getSort(manager.initialSort)
+    const ascending = storageModule.getSortDirection()
+    const list = manager.testSubset
+    const initialOrder = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed', 'Skipped', 'Passed']
+
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    if (type?.toLowerCase() === 'original') {
+        manager.setRender(list)
+    } else {
+        let sortedList
+        switch (type) {
+        case 'duration':
+            sortedList = durationSort(list, ascending)
+            break
+        case 'result':
+            sortedList = genericSort(list, type, ascending, initialOrder)
+            break
+        default:
+            sortedList = genericSort(list, type, ascending)
+            break
+        }
+        manager.setRender(sortedList)
+    }
+}
+
+const doSort = (type, skipDirection) => {
+    const newSortType = storageModule.getSort(manager.initialSort) !== type
+    const currentAsc = storageModule.getSortDirection()
+    let ascending
+    if (skipDirection) {
+        ascending = currentAsc
+    } else {
+        ascending = newSortType ? false : !currentAsc
+    }
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    const list = manager.testSubset
+    const sortedList = type === 'duration' ? durationSort(list, ascending) : genericSort(list, type, ascending)
+    manager.setRender(sortedList)
+}
+
+module.exports = {
+    doInitSort,
+    doSort,
+}
+
+},{"./datamanager.js":1,"./storage.js":8}],8:[function(require,module,exports){
+const possibleFilters = [
+    'passed',
+    'skipped',
+    'failed',
+    'error',
+    'xfailed',
+    'xpassed',
+    'rerun',
+]
+
+const getVisible = () => {
+    const url = new URL(window.location.href)
+    const settings = new URLSearchParams(url.search).get('visible')
+    const lower = (item) => {
+        const lowerItem = item.toLowerCase()
+        if (possibleFilters.includes(lowerItem)) {
+            return lowerItem
+        }
+        return null
+    }
+    return settings === null ?
+        possibleFilters :
+        [...new Set(settings?.split(',').map(lower).filter((item) => item))]
+}
+
+const hideCategory = (categoryToHide) => {
+    const url = new URL(window.location.href)
+    const visibleParams = new URLSearchParams(url.search).get('visible')
+    const currentVisible = visibleParams ? visibleParams.split(',') : [...possibleFilters]
+    const settings = [...new Set(currentVisible)].filter((f) => f !== categoryToHide).join(',')
+
+    url.searchParams.set('visible', settings)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const showCategory = (categoryToShow) => {
+    if (typeof window === 'undefined') {
+        return
+    }
+    const url = new URL(window.location.href)
+    const currentVisible = new URLSearchParams(url.search).get('visible')?.split(',').filter(Boolean) ||
+        [...possibleFilters]
+    const settings = [...new Set([categoryToShow, ...currentVisible])]
+    const noFilter = possibleFilters.length === settings.length || !settings.length
+
+    noFilter ? url.searchParams.delete('visible') : url.searchParams.set('visible', settings.join(','))
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getSort = (initialSort) => {
+    const url = new URL(window.location.href)
+    let sort = new URLSearchParams(url.search).get('sort')
+    if (!sort) {
+        sort = initialSort || 'result'
+    }
+    return sort
+}
+
+const setSort = (type) => {
+    const url = new URL(window.location.href)
+    url.searchParams.set('sort', type)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getCollapsedCategory = (renderCollapsed) => {
+    let categories
+    if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        const collapsedItems = new URLSearchParams(url.search).get('collapsed')
+        switch (true) {
+        case !renderCollapsed && collapsedItems === null:
+            categories = ['passed']
+            break
+        case collapsedItems?.length === 0 || /^["']{2}$/.test(collapsedItems):
+            categories = []
+            break
+        case /^all$/.test(collapsedItems) || collapsedItems === null && /^all$/.test(renderCollapsed):
+            categories = [...possibleFilters]
+            break
+        default:
+            categories = collapsedItems?.split(',').map((item) => item.toLowerCase()) || renderCollapsed
+            break
+        }
+    } else {
+        categories = []
+    }
+    return categories
+}
+
+const getSortDirection = () => JSON.parse(sessionStorage.getItem('sortAsc')) || false
+const setSortDirection = (ascending) => sessionStorage.setItem('sortAsc', ascending)
+
+const getCollapsedIds = () => JSON.parse(sessionStorage.getItem('collapsedIds')) || []
+const setCollapsedIds = (list) => sessionStorage.setItem('collapsedIds', JSON.stringify(list))
+
+module.exports = {
+    getVisible,
+    hideCategory,
+    showCategory,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    setSort,
+    getSortDirection,
+    setSortDirection,
+    getCollapsedCategory,
+    possibleFilters,
+}
+
+},{}]},{},[4]);
+    </script>
+  </footer>
+  </body>
+</html>
