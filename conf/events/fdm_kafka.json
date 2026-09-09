@@ -1,0 +1,19 @@
+{
+  "eventSource": "aws:kafka",
+  "eventSourceArn": "arn:aws:kafka:ca-central-1:574529944728:cluster/digital-msk-batca1/6415732f-1c7d-4e62-aacf-95c089a0ef75-2",
+  "bootstrapServers": "b-6.digitalmskbatca1.arylnm.c2.kafka.ca-central-1.amazonaws.com:9094,b-5.digitalmskbatca1.arylnm.c2.kafka.ca-central-1.amazonaws.com:9094,b-1.digitalmskbatca1.arylnm.c2.kafka.ca-central-1.amazonaws.com:9094",
+  "records": {
+    "RAW-FDM-NLOPS-BATCA1-14": [
+      {
+        "topic": "RAW-FDM-NLOPS-BATCA1",
+        "partition": 14,
+        "offset": 5829298,
+        "timestamp": 1774619328670,
+        "timestampType": "CREATE_TIME",
+        "key": "****",
+        "value": "eyJzZW5kZXIiOiJGRE0tT1BTIiwicmVjZWl2ZXIiOiJNZXNzYWdlQnJva2VyIiwiY3JlYXRlZCI6IjIwMjYtMDMtMjdUMTM6NDg6NDguNjcwWiIsIm1lc3NhZ2UiOnsiZmxpZ2h0RGV0YWlsIjp7ImlkZW50aWZpZXIiOnsiZmxpZ2h0Ijp7ImZuQ2FycmllciI6eyJfdGV4dCI6IlFLIn0sImZuTnVtYmVyIjp7Il90ZXh0Ijo4ODA0fX0sImRheU9mT3JpZ2luIjp7Il90ZXh0IjoiMjAyNi0wMy0yNyJ9fSwibGVnIjpbeyJfYXR0cmlidXRlcyI6eyJtb2RpZmllZCI6IlVQRCJ9LCJzdGF0ZSI6eyJfdGV4dCI6IlNLRCJ9LCJzY2hlZHVsZSI6eyJkZXBhcnR1cmVBaXJwb3J0Ijp7Il90ZXh0IjoiWVZSIn0sImRlcGFydHVyZSI6eyJfdGV4dCI6IjIwMjYtMDMtMjdUMjE6MDA6MDBaIn0sImFycml2YWxBaXJwb3J0Ijp7Il90ZXh0IjoiU0VBIn0sImFycml2YWwiOnsiX3RleHQiOiIyMDI2LTAzLTI3VDIyOjAxOjAwWiJ9LCJzZXJ2aWNlVHlwZSI6eyJfdGV4dCI6IkoifSwiYWlyY3JhZnRPd25lciI6eyJfdGV4dCI6IlFLIn0sImFpcmNyYWZ0U3VidHlwZSI6eyJfdGV4dCI6IkNSOSJ9LCJhaXJjcmFmdENvbmZpZ3VyYXRpb24iOnsiX3RleHQiOiJKMTJZNjQifSwicm90YXRpb25JZGVudGlmaWVyIjp7InJlZ2lzdHJhdGlvbiI6eyJfdGV4dCI6IlFLNzI0In19LCJlbXBsb3llckNhYmluIjp7Il90ZXh0IjoiUUsifSwiZW1wbG95ZXJDb2NrcGl0Ijp7Il90ZXh0IjoiUUsifSwic2VhdHMiOnsic2VhdHNGIjp7Il90ZXh0IjoxMn0sInNlYXRzQyI6eyJfdGV4dCI6MH0sInNlYXRzWSI6eyJfdGV4dCI6NjR9fX0sIm1pc2MiOnsibGVnUmVtYXJrIjp7Il9hdHRyaWJ1dGVzIjp7Im1vZGlmaWVkIjoiVVBEIn0sIl90ZXh0IjoiIFJFUVVJUkVEIEVRVUlQIENIQU5HRSBGUk9NIERINCA3OFkgVE8gQ1JKOSAxMkogNjRZIEFTIEEgUkVTVUxUIE9GIFlWUiBESDQgRkxJR0hUIE9QUyBDUkVXIENPTlNUUkFJTlRTXG4gREVMQVlFRCBGT1IgRVFVSVAgQ0hBTkdFIEFTIEEgUkVTVUlNVCBPRiBZVlIgRkxJR0hUIE9QUyBDUkVXIENPTlNUUkFJTlRTL1BPU1NJQkxFIEZVUlRIRVIgREVMQVkifX0sImxhc3RVcGRhdGUiOnsidXNlcklkIjp7Il90ZXh0IjoiT1BSRU1JTVAifSwidGltZXN0YW1wIjp7Il90ZXh0IjoiMjAyNi0wMy0yN1QxMzo0ODo0N1oifX19XX19LCJyZWNlaXZlZEF0IjoxNzc0NjE5MzI4NjY5fQ==",
+        "headers": []
+      }
+    ]
+  }
+}

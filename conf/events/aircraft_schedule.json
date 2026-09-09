@@ -1,0 +1,9 @@
+{
+  "ruleName": "TraxAircraftExtractorSchedule-uatca1",
+  "schedule": "rate(6 hours)",
+  "enabled": true,
+  "target": {
+    "input": "{}",
+    "description": "Triggers Trax aircraft extraction every 6 hours"
+  }
+}

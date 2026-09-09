@@ -1,0 +1,90 @@
+# conf/usecases/<id>.yaml — copy this file to add a pipeline. Files starting
+# with "_" are ignored. Every block below is OPTIONAL: a use case only runs the
+# scenarios for the capabilities it declares (see `aws-testkit list`).
+#
+# ${VAR} / ${VAR:-default} is expanded from the environment (keeps secrets out
+# of git). `profile:` resolves through conf/profiles.yaml (logical -> real).
+
+id: example                     # must match the file name
+region: ca-central-1            # REQUIRED
+
+# --- capability: lambda_ingestion / failed_ingestion / lambda_config ----------
+lambda:
+  name: "my-ingestion-lambda"
+  profile: lambda
+  test_event: events/example.json      # -> lambda_ingestion
+  invalid_event: events/example_bad.json # -> failed_ingestion
+  success: {status_code: 200}          # or {execution_status: Succeeded}
+  response_fields:                     # optional invoke-response assertions
+    - {path: "totalRecords", greater_than: 0}
+    - {path: "successCount", equals_field: "totalRecords"}
+    - {path: "message", success_text: true}
+  log_group: "/aws/lambda/my-ingestion-lambda"   # optional (defaults to this)
+  config:                             # -> lambda_config
+    runtime: "nodejs20.x"
+    env: {EVENT_BUCKET: "my-bucket", ON_SUCCESS: "MOVE"}
+    tags_any: ["dynatrace", "dt."]
+    event_source_queue: "my-queue"
+    log_retention_days: {min: 14, max: 15}   # or a single int
+
+# --- capability: s3_presence / s3_schema / s3_filename / s3_objects / s3_latest_dated
+s3:
+  profile: s3
+  bucket: "my-derived-event-bucket"           # REQUIRED when this block exists
+  prefixes: ["path/to/output/"]               # -> s3_presence, s3_schema
+  min_files: 1
+  select: {current_date_only: true, pick: random}   # pick: random | latest
+  event_predicate: ["eventType", "Id"]        # candidate must resolve these
+  filename_regex: '^[0-9a-fA-F-]{36}\.json$'  # -> s3_filename
+  date_prefix: "events/{date}/"               # -> s3_latest_dated ({date} = today UTC)
+  objects:                                    # -> s3_objects
+    - key: "path/to/known.json"
+      schema: {record_index: 0, fields: {Field: {equals: "X"}}}
+
+# --- schema applied to the fetched derived event -----------------------------
+schema:
+  root: ["data.customData.payload"]  # optional: descend here before validating
+  records: true                      # if doc is a list, validate every element
+  # record_index: 0                  # ...or just this one
+  fields:
+    "eventType":        {equals: "MyEvent"}
+    "Id":               {regex: '^[A-Z]{2}-\d+$'}
+    "Airport.IATACode": {iata: true}
+    "Count":            {type: int, nullable: true}
+  cross:
+    - {left: "A.x", equals: "B.y"}
+  # check names: present equals one_of regex type non_empty iata country
+  #              date time iso8601_utc uuid minutes_equals ; modifiers: nullable optional
+
+# --- capability: glue -------------------------------------------------------
+glue:
+  name: "my-etl-job"
+  profile: glue
+  schedule_regex: 'rate\(\s*30\s+minutes?\s*\)'
+  trigger_state: "ACTIVATED"
+
+# --- capability: sqs -------------------------------------------------------
+sqs:
+  profile: s3
+  queue: "my-queue"
+  dlq: "my-dlq"
+  failing_body: "qa_invalid_payload"
+  dlq_wait_seconds: 300
+
+# --- capability: lifecycle ------------------------------------------------
+lifecycle: {expiration_days: 30, status: Enabled}
+
+# --- capability: db -----------------------------------------------------
+db:
+  ssm:   {instance_id: "${SSM_INSTANCE_ID}", region: ca-central-1, profile: glue}
+  ssh:   {host: "${DB_SSH_HOST:-127.0.0.1}", port: "${DB_SSH_PORT:-13408}", username: "...", password: "${DB_SSH_PASSWORD}"}
+  mysql: {host: "...", port: 3306, username: "...", password: "${DB_MYSQL_PASSWORD}", database: "..."}
+  checks:
+    - {name: "table exists", query: "SHOW TABLES LIKE 'MyTable'", min_rows: 1}
+    - name: "row reconciles"
+      query: "SELECT * FROM MyTable WHERE Key = '123'"
+      min_rows: 1
+      column_values_include: {column: "COLUMN_NAME", values: ["ColA"]}
+      row0:
+        "ColA": {equals: "expected"}
+        "DurationMin": {minutes_equals: "01:30:00"}

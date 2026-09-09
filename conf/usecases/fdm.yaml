@@ -1,0 +1,36 @@
+id: fdm
+region: ca-central-1
+
+lambda:
+  name: "fdm-domain-ingestion-batca1-fdm-opensearch-update-lambda"
+  profile: lambda
+  success: {status_code: 200}
+  test_event: events/fdm_kafka.json
+  invalid_event: events/fdm_invalid.json
+
+s3:
+  profile: s3
+  bucket: "ac-odh-derived-event-storage-uat-cac-1"
+  prefixes: ["CDM/processed/CDM-FLIGHT-ODH-UAT/"]
+  min_files: 1
+  select: {current_date_only: true, pick: random}
+  event_predicate:
+    ["eventType", "Id", "FlightStateCode", "DepartureAirport.IATACode", "ArrivalAirport.IATACode"]
+
+schema:
+  fields:
+    "eventType":                 {equals: "FDMInfo"}
+    "Id":                        {regex: '^[A-Z]{2}-\d{1,5}-\d{4}-\d{2}-\d{2}-[A-Z]{3}$'}
+    "FlightStateCode":           {present: true}
+    "DepartureStatus":           {type: "dict"}
+    "DepartureStatus.Code":      {present: true, nullable: true}
+    "ArrivalStatus":             {type: "dict"}
+    "ArrivalStatus.Code":        {present: true, nullable: true}
+    "OverallStatus":             {type: "dict"}
+    "OverallStatus.Code":        {present: true, nullable: true}
+    "DepartureAirport":          {type: "dict"}
+    "DepartureAirport.IATACode": {iata: true}
+    "DepartureAirport.Gate":     {present: true, nullable: true}
+    "ArrivalAirport":            {type: "dict"}
+    "ArrivalAirport.IATACode":   {iata: true}
+    "ArrivalAirport.Gate":       {present: true, nullable: true}

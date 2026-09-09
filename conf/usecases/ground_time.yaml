@@ -1,0 +1,97 @@
+id: ground_time
+region: ca-central-1
+
+glue:
+  name: "ac-odh-flight-leg-ground-times-mst-batca1-data-job"
+  profile: glue
+  schedule_regex: 'rate\(\s*30\s+minutes?\s*\)|cron\(\s*(0|\*)/30\s'
+  trigger_state: "ACTIVATED"
+
+s3:
+  profile: s3
+  bucket: "ac-odh-derived-event-storage-uat-cac-1"
+  prefixes: ["CDM/processed/CDM-FLIGHTGROUNDTIME-ODH-UAT/"]
+  min_files: 1
+  select: {current_date_only: true, pick: random}
+  event_predicate:
+    ["Flight", "InboundFlight", "ScheduledGroundTime", "MinimumGroundTime", "GoTime",
+     "Flight.ArrivalAirport.IATACode"]
+
+schema:
+  fields:
+    "eventType":                   {type: "string"}
+    "Flight":                      {type: "dict"}
+    "InboundFlight":               {type: "dict"}
+    "ScheduledGroundTime":         {time: true}
+    "MinimumGroundTime":           {time: true}
+    "MinimumDepartureGroundTime":  {time: true}
+    "EstimatedGroundTime":         {time: true}
+    "GoTime":                      {iso8601_utc: true}
+    "Flight.OperatingCarrier.Code":            {non_empty: true}
+    "Flight.OperatingNumber":                  {non_empty: true}
+    "Flight.DepartureAirport.IATACode":        {iata: true}
+    "Flight.DepartureAirport.Country.Code":    {country: true}
+    "Flight.ArrivalAirport.IATACode":          {iata: true}
+    "Flight.ArrivalAirport.Country.Code":      {country: true}
+    "Flight.OriginDepartureAt":                {date: true}
+    "Flight.Aircraft.FleetIdentificationNumber":   {type: "string"}
+    "Flight.Aircraft.EquipmentType.IATACode":      {non_empty: true}
+    "InboundFlight.OperatingCarrier.Code":         {non_empty: true}
+    "InboundFlight.OperatingNumber":               {non_empty: true}
+    "InboundFlight.DepartureAirport.IATACode":     {iata: true}
+    "InboundFlight.DepartureAirport.Country.Code": {country: true}
+    "InboundFlight.ArrivalAirport.IATACode":       {iata: true}
+    "InboundFlight.ArrivalAirport.Country.Code":   {country: true}
+    "InboundFlight.OriginDepartureAt":             {date: true}
+    "InboundFlight.Aircraft.FleetIdentificationNumber": {type: "string"}
+    "InboundFlight.Aircraft.EquipmentType.IATACode":    {non_empty: true}
+  cross:
+    - {left: "InboundFlight.ArrivalAirport.IATACode", equals: "Flight.DepartureAirport.IATACode"}
+    - {left: "Flight.Aircraft.FleetIdentificationNumber", equals: "InboundFlight.Aircraft.FleetIdentificationNumber"}
+
+db:
+  ssm:
+    instance_id: "${SSM_INSTANCE_ID:-i-016a4569690b162b8}"
+    region: ca-central-1
+    profile: glue
+  ssh:
+    host: "${DB_SSH_HOST:-127.0.0.1}"
+    port: "${DB_SSH_PORT:-13408}"
+    username: "${DB_SSH_USERNAME:-ec2devuser}"
+    password: "${DB_SSH_PASSWORD}"
+  mysql:
+    host: "${DB_MYSQL_HOST:-digital-ods-infra-rds-batca1-cluster.cluster-cvzclik0t3ie.ca-central-1.rds.amazonaws.com}"
+    port: "${DB_MYSQL_PORT:-3306}"
+    username: "${DB_MYSQL_USERNAME:-dbdevuser}"
+    password: "${DB_MYSQL_PASSWORD}"
+    database: "${DB_MYSQL_DATABASE:-FlightScheduleDataStore}"
+  checks:
+    - name: "FlightLegGroundTime table exists"
+      query: "SHOW TABLES LIKE 'FlightLegGroundTime'"
+      min_rows: 1
+    - name: "expected schema columns present"
+      query: >
+        SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = 'FlightScheduleDataStore'
+          AND TABLE_NAME = 'FlightLegGroundTime' ORDER BY ORDINAL_POSITION
+      min_rows: 1
+      column_values_include:
+        column: "COLUMN_NAME"
+        values: ["FlightLegDepartureCountryCode", "FlightLegArrivalCountryCode",
+                 "EstimatedGroundTime", "GoTime"]
+    - name: "table has rows"
+      query: "SELECT COUNT(*) AS TotalRows FROM FlightLegGroundTime"
+      min_rows: 1
+    - name: "FlightLegNumber 9883 reconciles with S3 event values"
+      query: "SELECT * FROM FlightScheduleDataStore.FlightLegGroundTime WHERE FlightLegNumber = '9883'"
+      min_rows: 1
+      row0:
+        "FlightLegCarrierCode":            {equals: "AC"}
+        "FlightLegNumber":                 {equals: "9883"}
+        "FlightLegDepartureAirportCode":   {equals: "YHZ"}
+        "FlightLegDepartureCountryCode":   {equals: "CA"}
+        "ScheduledGroundTime":             {minutes_equals: "24:49:00"}
+        "MinimumGroundTime":               {minutes_equals: "00:50:00"}
+        "MinimumDepartureGroundTime":      {minutes_equals: "00:45:00"}
+        "EstimatedGroundTime":             {minutes_equals: "24:49:00"}
+        "GoTime":                          {minutes_equals: "2026-03-21T15:55:00.000Z"}

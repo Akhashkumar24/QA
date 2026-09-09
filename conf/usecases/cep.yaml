@@ -1,0 +1,54 @@
+id: cep
+region: ca-central-1
+
+s3:
+  profile: cep
+  bucket: "acnp-flight-event-capture-bat-cac1"
+  # date_prefix is templated with today's UTC date (or ${FLIGHT_EVENTS_DATE})
+  date_prefix: "flight-events/{date}/"
+  select: {pick: latest}
+  objects:
+    - key: "flight-events/2026-04-16/AC610-2026-04-17-YYZ/AC-610-2026-04-17-YYZ_e77d8e0e-a2f9-4966-80e5-7f56c862b1ab.json"
+
+schema:
+  root:
+    - "data.customData.getFlightFlattened"
+    - "customData.getFlightFlattened"
+    - "getFlightFlattened"
+  fields:
+    "airlineCode":                                   {present: true}
+    "originCode":                                    {present: true}
+    "destinationCode":                               {present: true}
+    "flightNumber":                                  {present: true}
+    "date":                                          {present: true}
+    "overallStatusCode":                             {present: true}
+    "estimatedDepartureTimeGMT":                     {present: true}
+    "flightInfo.operatingAirline.code":              {present: true}
+    "flightInfo.operatingAirline.flightNumber":      {present: true}
+    "flightInfo.marketingAirline.code":              {present: true}
+    "flightInfo.marketingAirline.flightNumber":      {present: true}
+    "flightInfo.overallStatus.status.code":          {present: true}
+    "flightInfo.overallStatus.delayReasonsHASH":     {present: true}
+    "flightInfo.origin.terminal":                    {present: true}
+    "flightInfo.origin.gate":                        {present: true}
+    "flightInfo.origin.statusCode":                  {present: true}
+    "flightInfo.origin.location.code":               {present: true}
+    "flightInfo.origin.scheduledDateTime.local":     {present: true}
+    "flightInfo.origin.scheduledDateTime.GMT":       {present: true}
+    "flightInfo.origin.estimatedDateTime.local":     {present: true}
+    "flightInfo.origin.estimatedDateTime.GMT":       {present: true}
+    "flightInfo.destination.terminal":               {present: true}
+    "flightInfo.destination.gate":                   {present: true}
+    "flightInfo.destination.statusCode":             {present: true}
+    "flightInfo.destination.location.code":          {present: true}
+    "flightInfo.destination.scheduledDateTime.local": {present: true}
+    "flightInfo.destination.scheduledDateTime.GMT":  {present: true}
+    "flightInfo.destination.estimatedDateTime.local": {present: true}
+    "flightInfo.destination.estimatedDateTime.GMT":  {present: true}
+    "flightInfo.destination.baggageCarousel":        {present: true}
+    "flightInfo.market.code":                        {present: true}
+    "flightInfo.aircraft.aircraftCode":              {present: true}
+    "flightInfo.aircraft.airlineCode":               {present: true}
+    "flightInfo.aircraft.fin":                       {present: true}
+    "flightInfo.aircraft.registrationNumber":        {present: true}
+    "flightInfo.aircraft.friendlyModelName":         {present: true}

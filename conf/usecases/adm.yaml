@@ -1,0 +1,28 @@
+id: adm
+region: ca-central-1
+
+lambda:
+  name: "ac-odh-baggage-carousel-event-ingestion-batca1-parser"
+  profile: lambda
+  success: {status_code: 200}
+  test_event: events/adm_kafka.json
+  invalid_event: events/adm_invalid.json
+
+s3:
+  profile: s3
+  bucket: "ac-odh-derived-event-storage-uat-cac-1"
+  prefixes: ["CDM/processed/CDM-FLIGHT-ODH-UAT/"]
+  min_files: 1
+  select: {current_date_only: true, pick: random}
+  event_predicate:
+    ["eventType", "Id", "DepartureAirport.IATACode", "ArrivalAirport.IATACode"]
+
+schema:
+  fields:
+    "eventType":                 {equals: "ADMInfo"}
+    "Carousel":                  {type: "int", nullable: true}
+    "Id":                        {regex: '^[A-Z]{2}-\d{1,5}-\d{4}-\d{2}-\d{2}-[A-Z]{3}$'}
+    "DepartureAirport":          {type: "dict"}
+    "DepartureAirport.IATACode": {iata: true}
+    "DepartureAirport.Terminal": {present: true, nullable: true}
+    "DepartureAirport.Gate":     {present: true, nullable: true}

@@ -1,0 +1,8 @@
+# Logical profile name -> real AWS CLI/SSO profile.
+# Use-case YAML files refer to the logical names (lambda, glue, s3, ...).
+# Override any of these per-environment with the matching *_AWS_PROFILE env var.
+lambda: "${LAMBDA_AWS_PROFILE:-AC_Digital_BAT}"
+glue:   "${GLUE_AWS_PROFILE:-AC_Digital_BAT}"
+s3:     "${S3_AWS_PROFILE:-ODH_UAT}"
+cdm:    "${CDM_AWS_PROFILE:-ODH_UAT}"
+cep:    "${CEP_AWS_PROFILE:-CEP_ACNP_BAT}"

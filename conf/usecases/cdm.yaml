@@ -1,0 +1,36 @@
+id: cdm
+region: ca-central-1
+
+lambda:
+  name: "${CDM_DERIVED_EVENT_PUBLISHER_LAMBDA:-ac-odh-CDM-Event-Processor-uatca1}"
+  profile: cdm
+  config:
+    runtime: "nodejs24.x"
+    env:
+      ARCHIVE_PREFIX: "CDM/processed/"
+      DLQ_PREFIX: "CDM/kafka-failures/"
+      EVENT_BUCKET: "ac-odh-derived-event-storage-uat-cac-1"
+      KAFKA_TOPIC_AIRCRAFT: "CDM-AIRCRAFT-ODH-UAT"
+      KAFKA_TOPIC_FLIGHT: "CDM-FLIGHT-ODH-UAT"
+      KAFKA_TOPIC_FLIGHTGROUNDTIME: "CDM-FLIGHTGROUNDTIME-ODH-UAT"
+      ON_KAFKA_FAILURE: "DLQ"
+      ON_SUCCESS: "MOVE"
+    tags_any: ["dynatrace", "dt.", "dt-", "observability"]
+    event_source_queue: "ac-odh-cdm-event-publisher-uatca1-queue"
+    log_retention_days: {min: 14, max: 15}
+
+sqs:
+  profile: cdm
+  queue: "ac-odh-cdm-event-publisher-uatca1-queue"
+  dlq: "ac-odh-cdm-event-publisher-uatca1-dlq"
+  failing_body: "cdm_qa_dlq_invalid_payload"
+  dlq_wait_seconds: "${CDM_DLQ_WAIT_SECONDS:-300}"
+
+s3:
+  profile: cdm
+  bucket: "ac-odh-derived-event-storage-uat-cac-1"
+  prefixes:
+    - "CDM/processed/CDM-FLIGHT-ODH-UAT/"
+    - "CDM/processed/CDM-AIRCRAFT-ODH-UAT/"
+    - "CDM/processed/CDM-FLIGHTGROUNDTIME-ODH-UAT/"
+  min_files: 1

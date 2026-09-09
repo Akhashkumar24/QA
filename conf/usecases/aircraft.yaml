@@ -1,0 +1,45 @@
+id: aircraft
+region: ca-central-1
+
+lambda:
+  name: "ac-odh-Trax-Aircraft-Extractor-uatca1"
+  profile: s3            # aircraft suite uses the default (ODH_UAT) credential chain
+  success: {execution_status: "Succeeded"}
+  test_event: events/aircraft_schedule.json
+  response_fields:
+    - {path: "message", success_text: true}
+    - {path: "totalRecords", greater_than: 0}
+    - {path: "successCount", equals_field: "totalRecords"}
+  log_group: "/aws/lambda/ac-odh-Trax-Aircraft-Extractor-uatca1"
+  log_success_text: "Trax Aircraft Extractor completed successfully"
+
+s3:
+  profile: s3
+  bucket: "ac-odh-derived-event-storage-uat-cac-1"
+  prefixes: ["CDM/processed/CDM-AIRCRAFT-ODH-UAT/"]
+  min_files: 1
+  select: {current_date_only: false, pick: latest}
+  filename_regex: '^[0-9a-fA-F-]{36}\.json$'
+  objects:
+    - key: "CDM/processed/CDM-AIRCRAFT-ODH-UAT/019ca5e9-5529-700a-a1b8-b9f2b453c1e7.json"
+      schema:
+        record_index: 0
+        fields:
+          "FleetIdentificationNumber": {equals: "518"}
+          "SerialNumber":              {equals: "61223"}
+          "Manufacturer":              {equals: "BOEING"}
+          "LastAcRegistration":        {equals: "C-FSOI"}
+          "EventType":                 {equals: "AircraftInfo"}
+
+schema:
+  records: true
+  fields:
+    "FleetIdentificationNumber": {non_empty: true}
+    "SerialNumber":              {non_empty: true}
+    "Manufacturer":              {type: "string", nullable: true}
+    "LastAcRegistration":        {type: "string", nullable: true}
+    "EventType":                 {equals: "AircraftInfo"}
+
+lifecycle:
+  expiration_days: 30
+  status: "Enabled"

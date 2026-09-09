@@ -1,0 +1,9 @@
+{
+  "eventSource": "aws:kafka",
+  "records": {
+    "invalid-topic-0": [
+      {"topic": "invalid", "partition": 0, "offset": 0, "timestamp": 0,
+       "timestampType": "CREATE_TIME", "value": "aW52YWxpZA==", "headers": []}
+    ]
+  }
+}
